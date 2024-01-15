@@ -1,0 +1,148 @@
+# ASP.NET Web Api
+
+Présentation par Éric Côté
+
+---
+
+### Eric Côté
+
+<img
+  src='https://www.reactacademy.live/static/20616643d8afc491bd4c1817ae69db63/5a6cd/Eric_Cote.webp'
+  alt='Eric Côté'
+  title='Eric Côté'
+  width='400px'
+/>
+
+- Débute avec les machines 8 bits (Commodore 64)
+- Formateur informatique depuis 2001 (.NET, C#, ASP.NET MVC, Sql Server, Azure)
+- Formateur en développement Open Source depuis 2018
+  - Javascript, TypeScript, React, GitHub, REST, Node, Express, Next, Remix, etc.
+- Formateur-Propriétaire de React Academy Live
+
+---
+
+## Historique
+
+Il y a eu beaucoup de technologies et de protocoles pour permettre l'invocation de code à distance.
+
+##### Avant 2000 :
+
+- Solutions propriétaires
+  - DCOM, Java RMI, Corba, etc
+- Problème: Pas de standard universel
+
+##### Après 2000 :
+
+- Solutions basées sur XML et HTTP
+  - XML Web Services, SOAP, WSDL, DISCO,
+  - Enterprise services, WCF, WS-security, WS-\*
+- Problème: à la sortie du iPhone, Steve Jobs refuse cette approche
+
+##### Après 2012 :
+
+- Solutions basées sur Web API
+
+---
+
+## Web API
+
+##### Wikipedia:
+
+- Une API Web côté serveur est une interface de programmation
+  - exposée par un ou plusieurs points d'accès (endpoint) géré par messages (requête-réponse)
+  - messages sont formattés en JSON ou XML
+  - exposé sur le web via un server web https
+
+<hr />
+
+- Inspiré par diverses technologies
+  - Achitecture REST
+  - Format JSON
+  - Références HATEOAS
+
+---
+
+## Historique Web API de Microsoft
+
+- WCF REST Starter Kit (2009)
+- Web API 1.0 (MVC 4.0) (2012)
+- Web API 2.0 (MVC 5.0) (2013)
+- ASP.NET Core 1.0 (2015)
+- ASP.NET 6.0 (2021) (Minimal API)
+- ASP.NET 8.0 (2023)
+
+---
+
+## Exemples de Web APIs
+
+- Azure Services​
+- Github​
+- AWS​
+- Microsoft Graph​
+
+---
+
+## HTTP
+
+- Hypertext Transfer Protocol
+
+![request](https://miro.medium.com/v2/resize:fit:927/1*blskBv2znoWBmDhIKz9dFA.png)
+
+---
+
+## Service Web
+
+- Dans une interaction web avec navigateur
+  - Navigateur envoit une requête au serveur
+  - On reçoit un document HTML (ou CSS, ou JavaScript...)
+- Dans une interaction avec client API
+  - Client envoit une requête REST au serveur
+  - Serveur retourne un document JSON (ou XML)
+
+<hr />
+
+- Souvent utilisé dans un SPA (Single Page Application)
+  - React, Angular, Vue, Svelte, Solid, Blazor WebAssembly
+
+---
+
+## Patron REST
+
+{/* prettier-ignore */}
+- Representational State Transfer (REST)
+- Approche architecturale pour bâtir des services Web.
+- Requêtes REST utilisent le protocole HTTP (ou HTTPS).
+- Utilise les verbes HTTP :
+  - `GET`: Obtenir des données
+  - `POST`: Créer une donnée
+  - `PUT`: Mettre à jour une donnée
+  - `PATCH`: Mise à jour partielle d'une donnée
+  - `DELETE`: Éliminer une donnée
+
+<hr />
+
+- Un service qui respecte REST se nomme un **RESTful API**. Il supporte :
+  - un URI de base
+  - des méthodes HTTP comme GET, POST, PUT, PATCH, ou DELETE
+  - Des formats (media type) pour les données, tel que JSON ou XML
+
+---
+
+## Routage REST
+
+- Un API doit fournir différents services
+- On utilise le routage pour créer des divisions locales dans notre code.
+- Les requêtes seront dirigées au bon contrôleur
+  - https://localhost:5000/pizza est dirigé à `PizzaController`
+  - https://localhost:5000/order est dirigé à `OrderController`
+
+---
+
+## Services de ASP.NET
+
+- **Sérialisation automatique**, en JSON. Les endpoints peuvent sérialiser les objets en JSON, sans configuration. On peut aussi personaliser manuellement ([custom serialization](https://learn.microsoft.com/en-us/aspnet/core/web-api/advanced/custom-formatters))
+- **Authentification et autorisation.** Les endpoints sont sécurisés via des _JSON Web Tokens_ (JWT). Des règles de contrôle d'accès fournissent l'authorisation.
+- **Routage spécifié dans le code.** On déclare nos routes et verbes dans des attributs qui décorent notre code. Les paramètres de nos méthodes peuvent spécifier leur provenance: un élément du chemin, le _query string_ ou le _request body_.
+- **HTTPS est configuré facilement.** La sécurité est primordiale. ASP.NET peut générer des certificats de test pour activer le HTTPS local.
+
+---

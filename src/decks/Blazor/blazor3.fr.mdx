@@ -1,0 +1,122 @@
+# Blazor et les données
+
+{/* from https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/ */}
+
+---
+
+## Intro
+
+- Imaginons une entreprise de livraison de pizzas
+  - Désirant moderniser son site Web destiné aux clients
+  - Désirant afficher des données dynamiques
+
+<hr />
+
+- On débute avec une page de bienvenue qui affiche les promotions du moment
+
+---
+
+### Composants Blazor
+
+- Les composants sont des portions d'IU isolées
+- Chaque composant consiste d'un un mélange de HTML et C#
+  - Utilise la syntaxe Razor
+- Le code est délimité par la directive `@code`
+- D'autres directives existent:
+  - Accéder aux variables
+  - Lier des valeurs
+  - Personaliser un rendu
+- Quand le fichier `.razor` est compilé, le HTML et C# génèrent une classe.
+
+---
+
+## Note
+
+- Razor est aussi utilisé par les vues MVC
+- Utilise l'extension `.cshtml` (plutôt que `.razor`)
+- En razor, il n'y a pas de distinction entre une vue et un controleur.
+
+---
+
+## Exemple d'un composant Blazor
+
+```razor
+@page "/index"
+
+<h1>Welcome to Blazing Pizza</h1>
+
+<p>@welcomeMessage</p>
+
+@code {
+  private string welcomeMessage = "However you like your pizzas, we can deliver them blazing fast!";
+}
+```
+
+le code initialise une variable `welcomeMessage`
+
+---
+
+## Créer des composants Blazor
+
+D'abord créer une app blazor
+
+```bash
+dotnet new blazor -o BlazingPizza -f net8.0
+cd BlazingPizza
+```
+
+`-o` output, dossier de sortie <br/>
+`-f` framework, version
+
+---
+
+## Créer un composant
+
+```bash
+dotnet new razorcomponent -n PizzaBrowser -o Pages -f net8.0
+```
+
+`-n` name, nom du composant <br/>
+`-o` output, dossier de sortie
+
+**NOTE:** Le nom d'un composant doit commencer par une majuscule.
+
+<hr />
+
+Pour démarrer visual studio code:
+
+```bash
+code .
+```
+
+Le point indique le dossier courant.
+
+---
+
+## Écrire un composant Blazor
+
+```razor
+@page "/index"
+
+<h1>Welcome to Blazing Pizza</h1>
+
+<p>@welcomeMessage</p>
+
+@code {
+  private string welcomeMessage =
+     "However you like your pizzas, we can deliver them fast!";
+}
+```
+
+- En Blazor, on combine le HTML, CSS et C# dans le même fichier.
+- Ils cohabitent grâce à la syntaxe Razor.
+- Razor utilise des directives avec le préfixe `@`
+- Les directive permettent de spécifier: code C#, routage, liaisons de données, classes importées, etc
+
+---
+
+## Composition d'un composant
+
+- Des balises HTML tel que `<h1>` ou `<p>`
+- Directive `@page` pour indiquer la le gabarit de routage
+- Directive `@code` pour indiquer un block C#

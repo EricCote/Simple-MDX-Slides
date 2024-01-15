@@ -1,0 +1,545 @@
+# Premiers pas en Blazor
+
+{/* from https://learn.microsoft.com/en-us/training/modules/build-blazor-webassembly-visual-studio-code/ */}
+
+---
+
+## Pourquoi Blazor?
+
+{/* prettier-ignore */}
+- Bâtir une app web "client-side"
+- Avec une équipe de Dev .NET
+- Déployer comme une "application web progressive" (PWA)
+    - On peut télécharger l'app et l'utiliser hors-ligne
+
+{/* prettier-ignore */}
+- Bâtir la logique, autant "front-end" que "back-end" 
+- Avec des langages, des frameworks, des outils communs.
+
+---
+
+## Bénéfices de Blazor
+
+D'après Microsoft:
+
+- Accélérer le temps de dévelopement
+- Réduire la complexité du pipeline de build
+- Simplifier la maintenance
+- Permettre de travailler autant du côté client que du côté serveur
+
+---
+
+## Division des technologies
+
+Dans le passé:
+
+- Développeur front-end (côté client) en JS (React, Angular, Vue)
+- Développeur back-end (côté serveur) en Web API REST (C#, Python, NodeJS)
+
+Deux solitudes, avec des experts différents.
+
+De plus, pour permettre la communication d'un côté à l'autre, il faut créer des structures qui doivent être synchronisées des 2 côtés.
+
+---
+
+## Blazor uni le côté client et serveur
+
+- Les applications Blazor sont composées de composants web UI réutilisables.
+- Ces appications sont bâties en C#, HTML et CSS.
+- Autant du côté client que serveur.
+- Permet de partager du code et des librairies entre le côté serveur et client.
+
+---
+
+## Deux grandes approches
+
+- Approche côté serveur qui gère les interactions UI à travers une **connexion WebSocket**
+- Approche côté client, qui exécute dans le navigateur via les **WebAssembly**
+
+---
+
+## Web Assembly (WASM)
+
+- Standard ouvert, de format binaire
+- Définit un format de code portable
+- Conçu pour exécuter dans un navigateur
+- WebAssembly est un langage d'assemblage, avec un format compact binaire
+  - Idéal pour le téléchagement rapide et la performance (presque) native.
+- WASM fournit une destination de compilation pour des langages
+  - C, C++ et Rust.
+- Co-habite avec du JavaScript.
+- Peut générer des applications web progressives (PWA) pour télécharger et éxécuter hors-ligne.
+
+---
+
+## Blazor WebAssembly
+
+- Permet de rouler .NET dans le navigateur.
+- Framework _"single page"_ utilisant les standards ouverts de Web Assembly
+- Aucun plugin nécessaire
+- Le code WebAssembly éxécute sur le navigateur
+- Roule dans le même _"sandbox"_ que JavaScript
+  - Empêche du code malicieux d'exécuter sur notre machine.
+- Blazor utilise un environnement d'exécution (runtime) compilé en WebAssembly
+  - Runtime téléchargé avec l'application.
+  - Exécute des instructions de .NET standard (IL).
+- Blazor WebAssembly est limité par le navigateur
+  - Accède aux fonctions de la page via l'interop JS.
+
+---
+
+## Navigateurs supportés pour WebAssembly
+
+- Microsoft Edge
+- Mozilla Firefox
+- Google Chrome
+- Apple Safari
+
+![Blazor WebAssembly](https://learn.microsoft.com/en-us/training/modules/build-blazor-webassembly-visual-studio-code/media/blazor-webassembly.png)
+
+---
+
+## Blazor Server
+
+- Permer d'héberger des composants Razor sur le serveur
+- Dans une application ASP.NET Core
+- Iteractivité gérée par une connexion SignalR
+- L'environnement d'exécution demeure sur le serveur
+
+---
+
+## Blazor Server
+
+- Execute le code C#
+- Gère les événements provenant du navigateur
+- Renvoie les mises à jour de l'interface, les composants rendus, au navigateur
+- La connexion entre le serveur Blazor et le navigateur gère aussi les appels interop en JS.
+
+![Blazor Server](https://learn.microsoft.com/en-us/training/modules/build-blazor-webassembly-visual-studio-code/media/blazor-server.png)
+
+---
+
+## Requis pour faire du Blazor
+
+{/* prettier-ignore */}
+- **Visual Studio 2022**
+  - Configurer avec charge de travail (workload): **Développement web et ASP.NET** (ASP.NET and web development)
+
+<hr />
+
+OU
+
+- **Visual Studio Code**
+  - Installer aussi **.NET SDK** (Ce qui inclut ASP.NET, C# et Blazor)
+
+---
+
+## Valider installation de .NET SDK
+
+```bash
+dotnet --list-sdks
+```
+
+```
+6.0.100 [C:\program files\dotnet\sdk]
+7.0.100 [C:\program files\dotnet\sdk]
+8.0.100 [C:\program files\dotnet\sdk]
+```
+
+Téléchargez la dernière version si ce n'est pas déjà installé.
+
+---
+
+## Générer un certificat Dev
+
+La commande suivante génère un certificat de développement local de type https, et ajoute celui-ci dans le _certificate store_ local (`trust`).
+
+```bash
+dotnet dev-certs https --trust
+```
+
+---
+
+## créer un projet blazor
+
+Dans un nouveau dossier avec le nom du projet, on lance la commande suivante:
+
+```bash
+dotnet new blazor -f net8.0
+```
+
+Pour exécuter en mode "hot-reload":
+
+```bash
+dotnet watch
+```
+
+Les touches <kbd>ctrl-c</kbd> stoppe le server de dev.
+
+Pour démarrer en mode https:
+
+```bash
+dotnet watch --launch-profile https
+```
+
+---
+
+## Razor
+
+- Razor est une syntaxe de type "markup" (balises)
+- Razor utilise HTML et C# pour écrire des composants pour Blazor
+- Razor est intégré à ASP.NET
+- Razor est conçu pour la création d'applications web
+
+---
+
+## Composants Razor
+
+- Un fichier Razor définit un composant qui génère l'IU de l'application
+- Les composants Blazor sont similaires aux "user controls" de ASP.NET
+- Dans un projet, la plupart des fichiers sont de type .razor
+- À la compilation, chaque composant Razor génère une classe .NET.
+- Ces classes incluent des éléments tel que:
+  - le state
+  - le rendu
+  - les méthodes du cycle de vie
+  - les gestionnaires d'événement.
+
+---
+
+## Page Counter
+
+[<img width="50%" src="https://learn.microsoft.com/en-us/training/modules/build-blazor-webassembly-visual-studio-code/media/counter.png" />](https://learn.microsoft.com/en-us/training/modules/build-blazor-webassembly-visual-studio-code/media/counter.png)
+
+- En cliquant le bouton, on incrémente le compte sans recharger la page entière.
+- Normalement, il faudrait du JavaScript. Mais avec Blazor, C# suffit.
+
+---
+
+## Code Counter
+
+<aside style={{display:'grid', gridTemplateColumns:'1fr 1fr', columnGap:15}} >
+
+```cshtml
+@page "/counter"
+@rendermode InteractiveServer
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">
+  Current count: @currentCount
+</p>
+
+<button class="btn btn-primary"
+  @onclick="IncrementCount">
+    Click me
+</button>
+
+```
+
+```cshtml
+
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
+```
+
+</aside>
+
+---
+
+## Explication
+
+- Directive `@page` indique le routage associé à cette page
+- Quand on clique le bouton:
+  - L'événement `onClick` est déclenché
+  - La méthode `incrementCount()` est appelée
+  - `currentCount` est incrémentée
+  - Le composant est rendu (génère du html)
+
+---
+
+## Ajouter le Counter à la page d'accueil
+
+Modifier le code de la page d'accueil
+
+```razor {9}
+@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<Counter />
+
+```
+
+---
+
+## Ajouter un paramètre à counter
+
+```razor {4-5,9}
+@code {
+    private int currentCount = 0;
+
+    [Parameter]
+    public int IncrementAmount { get; set; } = 1;
+
+    private void IncrementCount()
+    {
+        currentCount += IncrementAmount;
+    }
+}
+```
+
+---
+
+## Modifier la page d'accueil
+
+```razor {1}
+<Counter IncrementAmount='10' />
+```
+
+---
+
+## Code-Behind dans des fichiers séparés
+
+- Le code C# peut vivre dans le fichier Razor (.cshtml)
+- Quand le code est complexe, on peut isoler le C# dans un fichier code-behind (.cs)
+- Quand le code est simple, on peut mettre le code dans un seul fichier Razor (.cshtml)
+
+---
+
+## Directives de code @
+
+- On utilise `@()` pour exécuter une instruction C#
+- On utilise un bloc `@code {...}` pour exécuter plusieurs instructions C#
+- On utilise un bloc `@functions`pour définir des méthodes et des propriétés
+
+- `@page` est une directive qui indique la règle de routage associé au composant
+
+---
+
+## Connexions de Razor (data binding)
+
+- On peut lier un élément HTML à du C# (champ, propriété, expression)
+- Le data binding permet une synchronisation dans un ou deux sens
+- Les données sont générées et affichées suite à un _rendu_
+- Un composant qui éxécute un gestionnaire d'événement provoque le _rendu_
+- La directive `@bind` peut lier une variable C# à un objet HTML.
+
+---
+
+## Lab 1: Composant Todo
+
+## Ajouter une page Todo
+
+```bash
+dotnet new razorcomponent -n Todo -o Components/Pages
+```
+
+ou
+
+```bash
+dotnet new razorcomponent --name Todo --output Components/Pages
+```
+
+Le nom d'un composant Blazor doit commencer par une **majuscule**. Le nom du fichier généré sera `Todo.razor`.
+
+---
+
+## Ajouter le routage du composant Todo
+
+Ajoutons une directive `@page` pour le routage:
+
+```razor {1}
+@page "/todo"
+
+<h3>Todo</h3>
+
+@code {
+
+}
+
+```
+
+---
+
+## Ajouter Todo à la navigation
+
+`NavMenu` est utilisé pour la navigation.
+
+```razor {4-8}
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+  <nav class="flex-column">
+  ...
+    <div class="nav-item px-3">
+      <NavLink class="nav-link" href="todo">
+        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Todo
+      </NavLink>
+    </div>
+  </nav>
+</div>
+```
+
+---
+
+## Créer une classe TodoItem
+
+Dans la racine du projet, on ajoute un fichier `TodoItem.cs`. Ajoutez les code suivant:
+
+```cs
+
+public class TodoItem
+{
+  public string? Title { get; set; }
+  public bool IsDone { get; set; } = false;
+}
+
+```
+
+`Title` est un string nullable (avec le `?`)
+
+---
+
+## Lier une liste de TodoItems
+
+Modifions la page `todo.razor`
+
+```razor {5-14}
+@page "/todo"
+
+<h3>Todo</h3>
+
+<ul>
+  @foreach (var todo in todos)
+  {
+    <li>@todo.Title</li>
+  }
+</ul>
+
+@code {
+  private List<TodoItem> todos = new();
+}
+
+```
+
+---
+
+## Ajouter un formulaire pour créer des todos
+
+```razor {11-12}
+@page "/todo"
+<h3>Todo</h3>
+
+<ul>
+  @foreach (var todo in todos)
+  {
+    <li>@todo.Title</li>
+  }
+</ul>
+
+<input placeholder="Something todo" />
+<button>Add todo</button>
+
+@code {
+  private List<TodoItem> todos = new();
+}
+```
+
+---
+
+## Gérer le click du bouton
+
+```razor {2, 7-10}
+<input placeholder="Something todo" />
+<button @onclick="AddTodo">Add todo</button>
+
+@code {
+    private List<TodoItem> todos = new();
+
+    private void AddTodo()
+    {
+        // Todo: Add the todo
+    }
+}
+```
+
+---
+
+## On ajoute un champ pour gérer la donnée du formulaire
+
+```razor {3}
+@code {
+  private List<TodoItem> todos = new();
+  private string? newTodo;
+
+  // ... code continues ...
+}
+```
+
+Et on ajoute aussi l'attribut @bind pour lier le champ et le `input`
+
+```razor
+<input placeholder="Something todo" @bind="newTodo" />
+```
+
+---
+
+## On complète le gestionnaire d'événement
+
+```razor {7-11}
+@code {
+  private List<TodoItem> todos = new();
+  private string? newTodo;
+
+  private void AddTodo()
+  {
+    if (!string.IsNullOrWhiteSpace(newTodo))
+    {
+      todos.Add(new TodoItem { Title = newTodo });
+      newTodo = string.Empty;
+    }
+  }
+}
+```
+
+---
+
+## Exécutez le code
+
+On peut utiliser l'instuction
+
+---
+
+## Rendre la liste éditable
+
+```razor {5-6}
+<ul>
+    @foreach (var todo in todos)
+    {
+        <li class="list-unstyled">
+            <input type="checkbox" @bind="todo.IsDone" class="form-check-input align-text-bottom d-inline-block" />
+            <input @bind="todo.Title" class="form-control w-lg-25 d-inline" />
+        </li>
+    }
+</ul>
+```
+
+---
+
+## Ajouter le nombre de todo dans le titre
+
+```razor
+<h3>Todo (@todos.Count(todo => !todo.IsDone))</h3>
+```

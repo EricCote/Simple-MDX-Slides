@@ -7,7 +7,7 @@ import { createBrowserRouter, Outlet, useParams } from 'react-router-dom';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import GotoPopup from './components/slides/GotoPopup';
 
-import Status from './decks/Blazor/blazor1.fr.mdx';
+import Status from './decks/AspNetWebApi/api1.fr.mdx';
 
 const components = {
   Sandpack,
