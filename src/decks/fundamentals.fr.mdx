@@ -55,7 +55,7 @@ Offre de la formation depuis 2018.
 - Langages de programmation (JavaScript? Python? autre?)
 - Expérience Web (Débutant? Avancé?)
 - Expérience avec une technologie SPA (Aucune? React? Angular? Vue? Svelte?)
-- Expérience à batir un service Backend (ASP.NET Web API? Azure Functions? Python Flask? AWS Lambda? Autre?)
+- Expérience à batir un service Backend (ASP.NET Web API? Azure Functions? Python Flask? Express? Autre?)
 - Attentes pour la formation (Que désirez-vous bâtir?)
 
 ---
@@ -66,19 +66,19 @@ Offre de la formation depuis 2018.
 - Modèle déclaratif où les vues sont décrites en JSX
 - Découpage en composants réutilisables
 - Permet le développement de SPA (Single Page Apps)
-- Nécessite de convertir le JSX en JavaScript
-- Il faut donc utiliser une _boîte à outil_ ou un _Framework_
+- Nécessite de convertir le JSX en JavaScript avec un outil (Babel, Parcel, SWC...)
+- Il faut donc utiliser une _boîte à outil_ ou un _Framework_ (Vite, Next, Gatsby, Remix...)
 
 ---
 
 ### Historique de React
 
 - Créé en 2011 par Jordan Walke chez Faceboook
-  - Utilisé en 2012 pour réécrire Instagram.
+- Utilisé en 2012 pour réécrire Instagram.
 - 2013: React devient Open Source
-- 2015: React-Native permet de développer des apps mobiles
-- 2017: Sortie majeure de React 16
-- 2020: Sortie majeure de React 17
+- 2015: React Native permet de développer des apps mobiles
+- 2017: Sortie majeure de React 16 (Fiber rendering)
+- 2020: Sortie majeure de React 17 (Hooks)
 - 2022: Sortie majeure de React 18 (permet le “concurrent mode”)
 
 ---
@@ -87,12 +87,12 @@ Offre de la formation depuis 2018.
 
 - Plusieurs versions de rendu
   - React DOM génère du HTML (Le plus populaire)
-  - React Remotion génère des vidéos .mp4
   - React PDF génère des documents PDF
   - React Docx génère des documents Word
   - React Native génère des applications mobiles et tablettes (Android et iOS)
   - React TV génère des application télés
   - React VR génère des interfaces pour réalité virtuelle
+  - React Remotion génère des vidéos .mp4
   - React Unity génère des scènes 3D
 
 https://github.com/chentsulin/awesome-react-renderer
@@ -106,6 +106,7 @@ https://github.com/chentsulin/awesome-react-renderer
 - **Sans opinion** React se fout du routage, du chargement de données, des styles, etc.
 - **SSR** Compatible avec le Server-Side Rendering
 - **SSG** Compatible avec le Static-Site Generation
+- **RSC**: compatible avec les React Server Components
 
 ---
 
@@ -135,22 +136,23 @@ https://github.com/chentsulin/awesome-react-renderer
 
 ### Boites à outils clé en main
 
-- Aujourd'hui, on peut prendre des outils simples, ou des Framework évolués:
-  - Create-React-App
+- Aujourd'hui, on peut prendre des outils complets, ou des Framework évolués:
+  - Create-React-App (déprécié en 2023)
   - Vite
   - Gatsby
   - Next js
   - Remix
   - T3
+  - Epic Stack
 
 ---
 
-### Environnement VS Code
+### Extensions VS Code
 
 - Voici les extensions utiles:
 
   - **ESLint** (dbaeumer.vscode-eslint): valide le code et les règles
-  - **Prettier** (esbenp.prettier-vscode): formatte le code
+  - **Prettier** (esbenp.prettier-vscode): formatte le code web (css, js, html)
   - **Simple React Snippets** (burkeholland.simple-react-snippets): insère des snippets de code
     - Snippets utiles:
       - **imr, imrs, imrse:** import React, \{useState, useEffect\}
@@ -180,12 +182,13 @@ https://github.com/chentsulin/awesome-react-renderer
   - il faut aller dans la commande d'édition
 
 ```
-Shift-Command-P
+Shift-Command-P  (ou F1)
 Shell Command: Install 'code' command in PATH
 ```
 
 - Quittez `code` et fermez toutes fenêtres de terminal
   - Les prochaines fenêtres de terminal auront le "path" bien configuré
+  - Tapez `code .` que VS Code ouvre avec le dossier courant.
 
 ---
 
@@ -219,19 +222,19 @@ On se déplace vers le nouveau dossier et on peut ouvrir code dans le dossier co
 - **index.html** : Page d'accueil en html, vide
 - **vite.config.js** : configurations pour vite
 - **package.json** : configurations pour npm
-- **package-lock.json** : référence npm des dépendances et sous-dépendances avec versions. **Ne pas toucher.** Utilisez _npm_ pour mettre à jour.
+- **package-lock.json** : référence npm des dépendances et sous-dépendances avec versions. **Ne pas toucher.** Utilisez `npm install` ou `npm update` pour mettre à jour.
 
 **Dossiers:**
 
-- **node_modules** : contient les dépendances et sous-dépendances. **Ne pas toucher.** Utilisez `npm install` ou `npm update` pour rafraîchir.
-- **src**: contient les fichiers .js, .css et .svg qui sont compilés par Vite.
+- **node_modules** : contient les dépendances et sous-dépendances. **Ne pas toucher.** Utilisez `npm install` ou `npm update` pour gérer le contenu.
+- **src**: contient les fichiers .js, .tsx, .jsx, .css et .svg qui sont compilés par Vite.
 - **public**: contient les fichiers qui sont inclus sans être modifiés par Vite. (png, pdf, etc)
 
 ---
 
 ### Démarrer le projet en mode dev
 
-Les commandes suivantes doivent être lancées à la racine du projet. (La racine du projet, c'est où se trouve le fichier `package.json`)
+Les commandes suivantes doivent être lancées à la **racine du projet**. (La racine du projet, c'est où se trouve le fichier `package.json`)
 
 Si ce n'est pas déjà fait, installez de les dépendances du projet:
 
@@ -245,7 +248,7 @@ Lancez le projet en mode dev:
 npm run dev
 ```
 
-Ceci démarre un serveur web en mode dev. Lancez votre navigateur vers l'url suivant: http://localhost:5173
+Ceci démarre un serveur web en mode dev. Taper la lettre `o` et `entrée`. Ou lancez votre navigateur vers l'url suivant: http://localhost:5173
 
 ---
 
@@ -253,7 +256,7 @@ Ceci démarre un serveur web en mode dev. Lancez votre navigateur vers l'url sui
 
 - Modifiez `src/app.jsx` et sauvegardez,
   - Vous verrez la mise-à-jour se faire automatiquement dans le navigateur, sans avoir besoin de cliquer sur _rafraîchir_.
-- Cela s'appelle _Fast Refresh_ (ainsi que _Hot Reload_)
+- Cela s'appelle _React Fast Refresh_ (ainsi que _Hot Reload_)
 - Parfois, le _Fast Refresh_ échoue et il faut rafraîchir le navigateur manuellement en cliquant sur `refresh`
 - _Fast Refresh_ n'est disponible qu'avec le mode dev.
 
@@ -287,14 +290,19 @@ Ceci démarre un serveur web en mode dev. Lancez votre navigateur vers l'url sui
 
 JSX est écrit par un programmeur:
 
-```js
+```jsx
 <h3 title='alarme'>L'alarme sonne à {alarmTime}</h3>
 ```
 
 JSX est compilé par Babel (ou swc, etc):
 
-```js
-React.createElement('h3', { title: 'alarme' }, "L'alarme sonne à ", alarmTime);
+{/* prettier-ignore */}
+```jsx
+React.createElement(
+    'h3', 
+    { title: 'alarme' }, 
+    "L'alarme sonne à ", 
+    alarmTime);
 ```
 
 ---
@@ -320,25 +328,55 @@ L'ensemble des éléments React génère une arborescence nommée **Virtual DOM*
 
 ---
 
-### Compiler le projet
+### Expérience Dev
 
 Les navigateurs ne peuvent pas utiliser de JSX, il faut donc compiler (transpiler) le JSX vers JS.
 
-On utilise la commande suivante:
+Pour compiler en mode dev et démarrer un serveur web local:
+
+```bash
+npm run dev
+```
+
+Le **Dev mode** permet d'utiliser:
+
+- **Strict Mode**, chaque composant sera rendu deux fois. Permet de vérifier si le composant est compatible avec le "concurent rendering"
+- **Profiler Mode**, activé depuis l'extension "React Dev Tools"
+- **Hot Module Reloading (HMR)**, met à jour le JavaScript dans le navigateur, pas besoin de cliquer sur le bouton "refresh" pour recharger la page.
+
+---
+
+### Compiler le projet en production
+
+On utilise cette commande pour le mode production
 
 ```bash
 npm run build
 ```
 
-Il y a un nouveau dossier nommé "dist". C'est ce petit dossier qu'il faut distribuer.
+Cela génèere un nouveau dossier nommé "dist". C'est ce petit dossier qu'il faut distribuer sur un serveur web.
 
-Pour démarrer un serveur web pour tester le contenu de `dist`:
+**Build** pourra:
+
+- générer du JavaScript "minifié"
+- ignorer _Strict Mode_, _Profiling_, etc.
+
+---
+
+# Visionner le dossier dist
+
+Pour démarrer un serveur web local pour visionner le contenu de `dist`:
 
 ```bash
 npm run preview
 ```
 
-On peut alors naviguer vers http://localhost:4173
+On peut alors naviguer vers http://localhost:4173 (`o` et `enter` démarre le navigateur)
+
+**Note:**
+
+- Preview Web Server ne permet pas le **Hot Module Reloading** (HMR)
+- Quand on change du JavaScript, il faut faire un nouveau **build** et ensuite **recharger** la page
 
 ---
 

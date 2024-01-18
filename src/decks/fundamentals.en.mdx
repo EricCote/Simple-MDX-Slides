@@ -59,7 +59,7 @@ Multiple courses
 - Programming Languages (JavaScript? TypeScript? Python? other?)
 - Web Experience (Beginner? Advanced?)
 - SPA Experience (None? React? Angular? Vue? Svelte?)
-- Backend Service Experience (ASP.NET Web API? Azure Functions? Python Flask? AWS Lambda? Other?)
+- Backend Service Experience (ASP.NET Web API? Azure Functions? Python Flask? Express? Other?)
 - Expectations (What do you need to build?)
 
 ---
@@ -96,6 +96,7 @@ Multiple courses
   - React Native for phone and tablet apps (Android, iOS, Windows)
   - React TV for TV apps
   - React VR for virtual reality
+  - React Remotion for .mp4 videos
   - React Unity for 3D scenes
 
 https://github.com/chentsulin/awesome-react-renderer
@@ -109,7 +110,7 @@ https://github.com/chentsulin/awesome-react-renderer
 - **Opinion-less** React doesn't care about routing, data-loading, styles, etc.
 - **SSR** Compatible with Server-Side Rendering
 - **SSG** Compatible with Static-Site Generation
-- **RSC** New: compatible with React Server Components
+- **RSC**: compatible with React Server Components
 
 ---
 
@@ -139,8 +140,8 @@ https://github.com/chentsulin/awesome-react-renderer
 
 ### Turnkey Toolbox
 
-- Today, you have a plethora of toolboxes available:
-  - Create-React-App (now deprecated)
+- Today, you have a plethora of "ready to use" toolboxes available:
+  - Create-React-App (deprecated in 2023)
   - Vite
   - Gatsby
   - Next js
@@ -185,7 +186,7 @@ https://github.com/chentsulin/awesome-react-renderer
   - Need to go to the command palette
 
 ```
-Shift-Cmd-P
+Shift-Cmd-P  (or F1)
 Shell Command: Install 'code' command in PATH
 ```
 
@@ -229,15 +230,15 @@ This creates a new folder. Navigate to the new folder.
 
 **Folders:**
 
-- **node_modules** : contains dependencies and sub-dependencies. **Don't touch.** Use `npm install` or `npm update` pour manage.
-- **src**: contains .js, .ts, jsx, .css, and .svg files that are compiled by vite
+- **node_modules** : contains dependencies and sub-dependencies. **Don't touch.** Use `npm install` or `npm update` to manage.
+- **src**: contains .js, .ts, .jsx, .css, and .svg files that are compiled by vite
 - **public**: contains files that are served but not compiled by vite (png, pdf, etc)
 
 ---
 
 ### Start in dev mode
 
-The following commands are launched from the project root. (where `package.json` is stored)
+The following commands are launched from the **project root*. (where `package.json` is stored)
 
 You'll need to install the dependencies
 
@@ -251,7 +252,7 @@ Launch the project in dev mode:
 npm run dev
 ```
 
-This starts a web server in dev mode. Type the letter `o` to open the browser. (Or navigate to: http://localhost:5173 )
+This starts a web server in dev mode. Type the letter `o` and `enter` to open the browser. (Or navigate to: http://localhost:5173 )
 
 ---
 
@@ -272,6 +273,17 @@ This starts a web server in dev mode. Type the letter `o` to open the browser. (
 - JSX is stricter than HTML
 - Convert to HTML to JSX using a tool:
   https://transform.tools/html-to-jsx
+
+---
+
+- JSX became popular with React
+- Used by other SPA technologies:
+  - **Preact** (Light and compatible)
+  - **Vue** (Versatile)
+  - **Inferno** (Quick)
+  - **Svelte** (Productive)
+  - **Solid** (Composable)
+- JSX is not part of the JavaScript standard (maybe someday?)
 
 ---
 
@@ -317,7 +329,7 @@ These React elements build a tree structure called **Virtual DOM**.
 
 ---
 
-### Dev experience
+### Dev Experience
 
 Browsers don't understand JSX, one must first compile (transpile) JSX to JS.
 
@@ -360,7 +372,7 @@ To start a **Preview Web Server** for testing the `dist` contents:
 npm run preview
 ```
 
-Then browse to: http://localhost:4173
+Then browse to: http://localhost:4173 (`o` and `enter` starts the browser)
 
 **Please note:**
 
