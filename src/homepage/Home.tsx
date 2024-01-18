@@ -51,7 +51,7 @@ export default function Home() {
   return (
     <>
       <Menu />
-      <h1 className='my-5'>Simple MDX Slides</h1>
+      <h1 className='my-5'>React Slides</h1>
       {languages.map((lang) => (
         <>
           <div>
