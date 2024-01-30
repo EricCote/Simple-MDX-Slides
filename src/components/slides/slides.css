@@ -3,11 +3,15 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 2rem;
 }
 
 :root {
   --bs-font-sans-serif: Avenir Next, system-ui;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* Border-box all the things */
@@ -16,13 +20,12 @@
 }
 
 /* Cover the whole screen */
-html,
+/* html,
 body {
   block-size: 100%;
-}
+} */
 
 h1 {
-  font-size: 3.2em;
   line-height: 1.1;
 }
 
@@ -40,6 +43,8 @@ h1,
 .h1 {
   font-weight: normal;
   font-family: 'days one', system-ui;
+  font-size: 1.5em;
+  margin-block-end: 1rem;
 }
 
 /* This is the slide deck */
@@ -52,7 +57,7 @@ article {
   overflow-x: scroll;
   /* Make inline scrolling snap */
   scroll-snap-type: x mandatory;
-  scrollbar-width: none; /* Firefox */
+  /*scrollbar-width: none; /* Firefox */
 
   /* Use inline axis for scrolling where supported */
   @supports (overflow-inline: scroll) {
@@ -65,29 +70,62 @@ article {
 
 article::-webkit-scrollbar {
   /* background: transparent; /* Chrome/Safari/Webkit */
-  visibility: hidden;
+  /* visibility: hidden; */
   /* width: 0px; */ /* Ca enlève le scrollbar, mais désative la navigation par clavier  */
 }
 
-.disable-scrollbars {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-}
+/* .disable-scrollbars {
+  scrollbar-width: none; /* Firefox 
+  -ms-overflow-style: none; /* IE 10+ 
+} */
 
 /* These are the slides */
 article > * {
+  position: relative;
+
+  height: 100dvh;
+  overflow-y: scroll;
+
+  /* --------------
+  height:100vh;
+  overflow-y:scroll;
+  -------------- */
+  /* grid-auto-flow: row;
+  grid-template-rows: max-content; */
+
+  padding: 2rem;
+  font-size: 1.5rem;
+
   /* Fill the scroll container */
-  flex: 0 0 100%;
+  flex-shrink: 0;
+  flex-basis: 100%;
   /* Scroll to the start of the slide */
   scroll-snap-align: start;
   /* Increment the slide counter */
   counter-increment: slide;
 }
 
+article > ::-webkit-scrollbar {
+  /* background: transparent; /* Chrome/Safari/Webkit */
+  visibility: visible;
+  /* width: 0px; */ /* Ca enlève le scrollbar, mais désative la navigation par clavier  */
+}
+
 /* This is the counter */
 article > ::before {
   /* Display the counter */
   content: counter(slide);
+  position: absolute;
+  inset-block-start: 1rem;
+  inset-inline-end: 1rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant: tabular-nums;
+  line-height: 1;
+  background-color: var(--bs-body-colorx);
+  color: var(--bs-body-bgx);
+  clip-path: circle();
 }
 
 /* This is a cover layout for the first slide */
@@ -98,52 +136,6 @@ article > .first-slide {
   padding-inline: 4rem;
   font-size: clamp(1rem, 1rem + 2vw, 3rem);
   line-height: 1.3;
-}
-
-:root {
-  scrollbar-color: transparent transparent;
-  scrollbar-width: thin;
-}
-
-/* Make each slide a vertical flex layout */
-article > * {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  /* --------------
-  height:100vh;
-  overflow-y:scroll;
-  -------------- */
-  /* grid-auto-flow: row;
-  grid-template-rows: max-content; */
-  row-gap: 1rem;
-  padding: 2rem;
-  font-size: 1.5rem;
-}
-
-/* Style the slide counter */
-article > ::before {
-  position: absolute;
-  inset-block-start: 1rem;
-  inset-inline-end: 1rem;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: 700;
-  font-variant: tabular-nums;
-  line-height: 1;
-  background-color: var(--foreground);
-  color: var(--background);
-  clip-path: circle();
-}
-
-/* Remove margin for slide content */
-article > * > * {
-  margin: 0;
-}
-
-/* For all none cover layouts set the heading size */
-article > * + * > :first-child {
-  font-size: 1.5em;
 }
 
 /* For the cover layout set the measure */
