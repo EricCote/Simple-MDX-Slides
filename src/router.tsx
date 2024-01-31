@@ -8,6 +8,7 @@ import { lazy, Suspense, useEffect, useMemo } from 'react';
 import GotoPopup from './components/slides/GotoPopup';
 
 import Status from './decks/AspNetWebApi/api1.fr.mdx';
+import { useLanguage } from './components/slides/LanguageProvider';
 
 const components = {
   Sandpack,
@@ -113,7 +114,11 @@ function MyLoader() {
   );
 
   return (
-    <Suspense fallback={<div>Page is Loading...</div>}>
+    <Suspense
+      fallback={
+        <div>{lang === 'fr' ? 'Chargement...' : 'Slides are Loading...'}</div>
+      }
+    >
       <MyMdx components={components} />
     </Suspense>
   );
@@ -121,9 +126,10 @@ function MyLoader() {
 
 function Language() {
   // Get the lang param from the URL.
-  let { lang } = useParams();
-  lang = lang ?? 'en';
-  document.documentElement.lang = lang;
+  const { lang } = useParams();
+  const [, setLanguage] = useLanguage();
+  setLanguage(lang ?? 'en');
+
   return (
     <>
       <Outlet />

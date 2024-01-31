@@ -2,6 +2,23 @@
 // The popup prompts a slide number, and navigates to it.
 import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import DarkModeMenu from '../dark-mode/DarkModeMenu';
+import { useLanguage } from './LanguageProvider';
+
+const textes = {
+  fr: {
+    dark: 'Mode dark',
+    slideNum: 'Numéro de Diapositive',
+    cancel: 'Annuler',
+    goto: 'Aller à la diapositive',
+  },
+  en: {
+    dark: 'Dark Mode',
+    slideNum: 'Slide Number',
+    cancel: 'Cancel',
+    goto: 'Go to Slide',
+  },
+};
 
 //this flag will only register the event handler once when in StrictMode (dev mode)
 let isEventRegistered = false;
@@ -9,6 +26,7 @@ let isEventRegistered = false;
 function GotoPopup() {
   const [show, setShow] = useState<boolean>(false);
   const txtNombre = useRef<HTMLInputElement>();
+  let [lang] = useLanguage();
 
   let options = { capture: true };
 
@@ -21,6 +39,7 @@ function GotoPopup() {
     //get the page number
     const page = txtNombre.current!.value;
     setShow(false); // hide modal
+    if (!Number.isInteger(+page)) return;
     // we need to change the page only once the fade animation
     // is done. A delay of 500 ms is good enough
     setTimeout(() => changePage(`#s${page}`), 500);
@@ -73,14 +92,19 @@ function GotoPopup() {
     }
 
     const focusedPage: HTMLFormElement = document.querySelector(`#${pageRef}`)!;
-    focusedPage.scrollIntoView({ behavior: 'instant' });
-    focusedPage?.focus();
+    if (focusedPage) {
+      focusedPage.scrollIntoView({ behavior: 'instant' });
+      focusedPage?.focus();
+    } else {
+      location.hash = '';
+    }
   }, []);
 
   //If we've just started re-rendering after starting to show the popup, set the focus.
   useEffect(() => {
     if (show) {
       txtNombre.current!.focus();
+      txtNombre.current!.select();
     } else {
     }
   }, [show]);
@@ -89,20 +113,27 @@ function GotoPopup() {
     <Modal show={show} onHide={handleClose}>
       <Form onSubmit={GotoPage}>
         <Modal.Header closeButton>
-          <Modal.Title>Go to Slide</Modal.Title>
+          <Modal.Title>Menu</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div className='d-flex flex-row'>
+            {textes[lang!].dark}
+            <DarkModeMenu className='ms-3' onChanged={handleClose} />
+          </div>
+          <hr />
           <Form.Control
+            type='number'
             ref={txtNombre as RefObject<HTMLInputElement>}
-            placeholder='Slide Number'
+            placeholder={textes[lang!].slideNum}
+            defaultValue={location.hash?.slice(2) || '1'}
           />
         </Modal.Body>
         <Modal.Footer>
           <Button variant='secondary' onClick={handleClose}>
-            Cancel
+            {textes[lang!].cancel}
           </Button>
           <Button type='submit' variant='primary'>
-            Go to Slide
+            {textes[lang!].goto}
           </Button>
         </Modal.Footer>
       </Form>

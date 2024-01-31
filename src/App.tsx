@@ -7,11 +7,14 @@ import ThemeProvider from './components/dark-mode/ThemeProvider';
 
 import { RouterProvider } from 'react-router-dom';
 import router from './router';
+import LanguageProvider from './components/slides/LanguageProvider';
 
 export default function App() {
   return (
     <ThemeProvider theme='auto'>
-      <RouterProvider router={router} />
+      <LanguageProvider>
+        <RouterProvider router={router} />
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

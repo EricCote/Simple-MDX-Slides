@@ -3,11 +3,18 @@
 import { NavDropdown } from 'react-bootstrap';
 import { useTheme, useThemeList } from './ThemeProvider';
 
-export default function DarkModeMenu() {
+export default function DarkModeMenu({
+  onChanged,
+  className,
+}: {
+  onChanged?: CallableFunction;
+  className?: string;
+}) {
   const [currentTheme, setTheme] = useTheme();
   const themeList = useThemeList();
   return (
     <NavDropdown
+      className={className}
       title={
         <>
           {
@@ -25,6 +32,9 @@ export default function DarkModeMenu() {
             className={active ? 'active' : ''}
             onClick={() => {
               setTheme(theme.name.toLowerCase());
+              if (onChanged) {
+                onChanged();
+              }
             }}
           >
             <>

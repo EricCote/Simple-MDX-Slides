@@ -9,8 +9,12 @@ export default function Menu() {
     <LocalTheme theme='auto'>
       <Navbar expand='lg' bg='body' className='mb-4'>
         <Container>
-          <Navbar.Brand as='h4'>
-            <Link to='/' className='text-decoration-none'>
+          <Navbar.Brand as='h1'>
+            <Link
+              to='/'
+              className='text-decoration-none'
+              style={{ fontSize: '3rem' }}
+            >
               React Academy
             </Link>
           </Navbar.Brand>
