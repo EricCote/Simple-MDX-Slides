@@ -30,16 +30,6 @@ const components = {
   },
   wrapper({ children }: any) {
     //layout function for mdx.
-    useEffect(() => {
-      //This will add slide numbers, from 1 to x
-      let results = document.querySelectorAll('article>*');
-      results.forEach((slide, idx) => {
-        slide.id = (idx + 1).toString();
-      });
-      if (location.hash) {
-        location.assign(location.hash);
-      }
-    });
     return (
       <>
         <GotoPopup />

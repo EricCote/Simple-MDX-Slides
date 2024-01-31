@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Menu from './Menu';
+import { Fragment } from 'react';
 
 const decks = [
   {
@@ -53,24 +54,24 @@ export default function Home() {
       <Menu />
       <h1 className='my-5'>React Slides</h1>
       {languages.map((lang) => (
-        <>
+        <Fragment key={lang.shortName}>
           <div>
             <h3>{lang.language}</h3>
             {decks
               .filter((deck) => deck.language === lang.shortName)
               .map((deck) => (
-                <>
+                <Fragment key={deck.route}>
                   <h5>
                     <Link to={`decks/${lang.shortName}/${deck.route}`}>
                       {deck.title}
                     </Link>
                   </h5>
                   <p>{deck.description}</p>
-                </>
+                </Fragment>
               ))}
           </div>
           <hr className='my-5' />
-        </>
+        </Fragment>
       ))}
 
       <p>
