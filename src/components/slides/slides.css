@@ -176,27 +176,6 @@ code {
   background-color: rgb(52, 58, 64);
 }
 
-.color1,
-.color1 code {
-  color: darkblue;
-}
-.color2,
-.color2 code {
-  color: darkred;
-}
-.color3,
-.color3 code {
-  color: darkgreen;
-}
-.color4,
-.color4 code {
-  color: darkslateblue;
-}
-.color5,
-.color5 code {
-  color: darkviolet;
-}
-
 tr:hover {
   background-color: lightgray;
 }
