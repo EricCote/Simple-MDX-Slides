@@ -5,7 +5,15 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import DarkModeMenu from '../dark-mode/DarkModeMenu';
 import { useLanguage } from './LanguageProvider';
 
-const textes = {
+interface TranslationObject {
+  [key: string]: translationTable;
+}
+
+interface translationTable {
+  [key: string]: string;
+}
+
+const textes: TranslationObject = {
   fr: {
     dark: 'Mode dark',
     slideNum: 'Numéro de Diapositive',
@@ -109,6 +117,10 @@ function GotoPopup() {
     }
   }, [show]);
 
+  function t(str: string) {
+    return textes[lang!][str];
+  }
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Form onSubmit={GotoPage}>
@@ -117,23 +129,23 @@ function GotoPopup() {
         </Modal.Header>
         <Modal.Body>
           <div className='d-flex flex-row'>
-            {textes[lang!].dark}
+            {t('dark')}
             <DarkModeMenu className='ms-3' onChanged={handleClose} />
           </div>
           <hr />
           <Form.Control
             type='number'
             ref={txtNombre as RefObject<HTMLInputElement>}
-            placeholder={textes[lang!].slideNum}
+            placeholder={t('slideNum')}
             defaultValue={location.hash?.slice(2) || '1'}
           />
         </Modal.Body>
         <Modal.Footer>
           <Button variant='secondary' onClick={handleClose}>
-            {textes[lang!].cancel}
+            {t('cancel')}
           </Button>
           <Button type='submit' variant='primary'>
-            {textes[lang!].goto}
+            {t('goto')}
           </Button>
         </Modal.Footer>
       </Form>

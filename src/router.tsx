@@ -88,6 +88,14 @@ const router = createBrowserRouter([
                 path: ':subject/:doc',
                 element: <MyLoader />,
               },
+              {
+                path: ':subject/:subfolder/:doc',
+                element: <MyLoader />,
+              },
+              {
+                path: ':subject/:subfolder/:subsubfolder/:doc',
+                element: <MyLoader />,
+              },
             ],
           },
         ],
@@ -99,16 +107,28 @@ const router = createBrowserRouter([
 export default router;
 
 function MyLoader() {
-  const { subject, doc, lang } = useParams();
+  const { subject, subfolder, subsubfolder, doc, lang } = useParams();
 
   const MyMdx = useMemo(
     () =>
       lazy(() => {
-        if (subject) {
-          return import(`./decks/${subject}/${doc}.${lang}.mdx`);
+        let module;
+        if (subsubfolder) {
+          module = import(
+            `./decks/${subject}/${subfolder}/${subsubfolder}/${doc}.${lang}.mdx`
+          );
+        } else if (subfolder) {
+          module = import(`./decks/${subject}/${subfolder}/${doc}.${lang}.mdx`);
+        } else if (subject) {
+          module = import(`./decks/${subject}/${doc}.${lang}.mdx`);
         } else {
-          return import(`./decks/${doc}.${lang}.mdx`);
+          module = import(`./decks/${doc}.${lang}.mdx`);
         }
+        module.then((mod) => {
+          document.title =
+            mod.frontmatter?.title ?? (lang === 'fr' ? 'Diapos' : 'Slides');
+        });
+        return module;
       }),
     [subject, doc, lang]
   );
@@ -128,7 +148,8 @@ function Language() {
   // Get the lang param from the URL.
   const { lang } = useParams();
   const [, setLanguage] = useLanguage();
-  setLanguage(lang ?? 'en');
+
+  useEffect(() => setLanguage(lang ?? 'en'), [lang]);
 
   return (
     <>

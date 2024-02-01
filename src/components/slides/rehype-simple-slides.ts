@@ -3,7 +3,7 @@
 // These slides only go right-left, there are no special "drill-down" slides that go down-up
 // I added a slideType, so one could wrap a slide using <div>, <section>, <article>, <figure> or whatever
 
-import { Node, Element, Literal, Root } from 'hast';
+import { Node, Element, Literal, Root, RootContent } from 'hast';
 
 interface Options {
   slideSeparators: string[];
@@ -29,7 +29,7 @@ function elementsToSimpleSlides(rootNode: Root, options: Options) {
     )
   ) {
     let firstSlide = '';
-    if ((rootNode.children[0] as Element).tagName === 'h1')
+    if (rootNode.children.filter((elem) => (elem as Element).tagName === 'h1'))
       firstSlide = 'first-slide';
     // if not, lets add the initial slide
     slides.push({

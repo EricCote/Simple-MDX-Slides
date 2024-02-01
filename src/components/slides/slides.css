@@ -136,23 +136,6 @@ article > :focus-visible {
   clip-path: circle();
 }
 
-/* This is the counter 
-article > ::before {
-  /* Display the counter 
-  content: counter(slide);
-  position: absolute;
-  inset-block-start: 1rem;
-  inset-inline-end: 1rem;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: 700;
-  font-variant: tabular-nums;
-  line-height: 1;
-  background-color: var(--bs-body-colorx);
-  color: var(--bs-body-bgx);
-  clip-path: circle();
-}*/
-
 /* This is a cover layout for the first slide */
 article > .first-slide {
   display: grid;
@@ -164,8 +147,9 @@ article > .first-slide {
 }
 
 /* For the cover layout set the measure */
-article > :first-child > :first-child {
+article > :first-child > h1 {
   max-inline-size: 21ch;
+  font-size: 2.5em;
 }
 
 code {
@@ -198,27 +182,6 @@ tr:hover {
 
 [data-bs-theme='dark'] tr:hover {
   background-color: darkslategrey;
-}
-[data-bs-theme='dark'] .color1,
-[data-bs-theme='dark'] .color1 code {
-  color: lightblue;
-}
-[data-bs-theme='dark'] .color2,
-[data-bs-theme='dark'] .color2 code {
-  color: lightcoral;
-}
-
-[data-bs-theme='dark'] .color3,
-[data-bs-theme='dark'] .color3 code {
-  color: lightgreen;
-}
-[data-bs-theme='dark'] .color4,
-[data-bs-theme='dark'] .color4 code {
-  color: lightsteelblue;
-}
-[data-bs-theme='dark'] .color5,
-[data-bs-theme='dark'] .color5 code {
-  color: lightgoldenrodyellow;
 }
 
 [data-bs-theme='dark'] code {

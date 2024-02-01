@@ -1,0 +1,42 @@
+.color1,
+.color1 code {
+  color: darkblue;
+}
+.color2,
+.color2 code {
+  color: darkred;
+}
+.color3,
+.color3 code {
+  color: darkgreen;
+}
+.color4,
+.color4 code {
+  color: darkslateblue;
+}
+.color5,
+.color5 code {
+  color: darkviolet;
+}
+
+[data-bs-theme='dark'] .color1,
+[data-bs-theme='dark'] .color1 code {
+  color: lightblue;
+}
+[data-bs-theme='dark'] .color2,
+[data-bs-theme='dark'] .color2 code {
+  color: lightcoral;
+}
+
+[data-bs-theme='dark'] .color3,
+[data-bs-theme='dark'] .color3 code {
+  color: lightgreen;
+}
+[data-bs-theme='dark'] .color4,
+[data-bs-theme='dark'] .color4 code {
+  color: lightsteelblue;
+}
+[data-bs-theme='dark'] .color5,
+[data-bs-theme='dark'] .color5 code {
+  color: lightgoldenrodyellow;
+}

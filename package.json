@@ -2,6 +2,9 @@
   "name": "mdxslides",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "node": ">=20"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,23 +12,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@codemirror/lint": "^6.4.2",
-    "@codesandbox/sandpack-react": "^2.10.0",
-    "@mapbox/rehype-prism": "^0.9.0",
-    "@mdx-js/rollup": "^3.0.0",
-    "bootstrap": "^5.3.0",
     "eslint": "^8.50.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "@codesandbox/sandpack-react": "^2.10.0",
+    "bootstrap": "^5.3.0",
     "parse-numeric-range": "^1.3.0",
     "prism-themes": "^1.9.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.10.0",
-    "remark-gfm": "^4.0.0",
-    "unist-util-filter": "^5.0.1"
+    "react-router-dom": "^6.10.0"
   },
   "devDependencies": {
+    "@codemirror/lint": "^6.4.2",
+    "@mapbox/rehype-prism": "^0.9.0",
+    "remark-gfm": "^4.0.0",
+    "remark-mdx-frontmatter": "^4.0.0",
+    "@mdx-js/rollup": "^3.0.0",
     "@types/hast": "^3.0.1",
     "@types/node": "^20.2.5",
     "@types/react": "^18.0.28",
@@ -36,7 +39,10 @@
     "remark-frontmatter": "^5.0.0",
     "sass": "^1.61.0",
     "typescript": "^5.0.3",
+    "vfile-matter": "^5.0.0",
+    "to-vfile": "^8.0.0",
     "unist-util-visit": "^5.0.0",
+    "unist-util-filter": "^5.0.1",
     "vite": "^5.0.10"
   }
 }

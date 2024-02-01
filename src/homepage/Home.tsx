@@ -1,46 +1,9 @@
 import { Link } from 'react-router-dom';
 import Menu from './Menu';
 import { Fragment } from 'react';
+import slidedecks from '../slidedecks.json';
 
-const decks = [
-  {
-    route: 'fundamentals',
-    title: 'React Fundamentals',
-    description: 'Your first steps with React',
-    language: 'en',
-  },
-  {
-    route: 'fundamentals',
-    title: 'Fondements de React',
-    description: 'Vos premiers pas en React',
-    language: 'fr',
-  },
-  {
-    route: 'remix',
-    title: 'Intro à Remix',
-    description: 'Intro éclair à Remix',
-    language: 'fr',
-  },
-
-  {
-    route: 'react-router',
-    title: 'React Router',
-    description: 'Introducing React Router',
-    language: 'en',
-  },
-  {
-    route: 'react-router',
-    title: 'Routage React',
-    description: 'Introduction à React Router',
-    language: 'fr',
-  },
-  {
-    route: 'react-pdf',
-    title: 'Générer pdf avec React',
-    description: "C'est possible de générer des pdf avec React",
-    language: 'fr',
-  },
-];
+const decks = slidedecks;
 
 const languages = [
   { language: 'Français', shortName: 'fr' },
@@ -61,7 +24,7 @@ export default function Home() {
               .filter((deck) => deck.language === lang.shortName)
               .map((deck) => (
                 <Fragment key={deck.route}>
-                  <h5>
+                  <h5 className='my-0'>
                     <Link to={`decks/${lang.shortName}/${deck.route}`}>
                       {deck.title}
                     </Link>
