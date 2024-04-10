@@ -20,8 +20,9 @@ const components = {
         className={className}
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
           columnGap: 10,
+          alignItems: 'center',
           ...style,
         }}
       >

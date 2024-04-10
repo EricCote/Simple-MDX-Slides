@@ -22,15 +22,20 @@ function elementsToSimpleSlides(rootNode: Root, options: Options) {
   const { slideSeparators, slideType, slideClass } = options;
   const slides: Element[] = [];
 
-  //is the first child a separator?
+  //is the first child as separator?
   if (
     !options.slideSeparators.includes(
       (rootNode.children[0] as Element)?.tagName
     )
   ) {
     let firstSlide = '';
-    if (rootNode.children.filter((elem) => (elem as Element).tagName === 'h1'))
+
+    if (
+      rootNode.children.filter((elem) => (elem as Element).tagName === 'h1')
+        .length >= 1
+    ) {
       firstSlide = 'first-slide';
+    }
     // if not, lets add the initial slide
     slides.push({
       type: 'element',
@@ -71,7 +76,7 @@ function elementsToSimpleSlides(rootNode: Root, options: Options) {
         }
       }
       //let's compare the node name with the mdx imports
-      //if its the case, then lets add those slides to the top level.
+      //if its the case, then lets move those slides to the top level.
       if (mdxImports.includes((node as any).name)) {
         let temp = slides[slides.length - 1].children;
         slides.pop();
@@ -86,6 +91,7 @@ function elementsToSimpleSlides(rootNode: Root, options: Options) {
       }
     }
   }
+
   return { type: 'root', children: slides } as Node;
 }
 

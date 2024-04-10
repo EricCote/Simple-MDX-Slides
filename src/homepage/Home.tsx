@@ -21,7 +21,7 @@ export default function Home() {
           <div>
             <h3>{lang.language}</h3>
             {decks
-              .filter((deck) => deck.language === lang.shortName)
+              .filter((deck) => deck.language === lang.shortName && deck.route)
               .map((deck) => (
                 <Fragment key={deck.route}>
                   <h5 className='my-0'>
