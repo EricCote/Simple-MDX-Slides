@@ -14,6 +14,13 @@
     "filename": "fundamentals.fr.mdx"
   },
   {
+    "route": "kill-useEffect",
+    "title": "Kill UseEffects",
+    "description": "Get rid of unecessary useEffect() in your code",
+    "language": "en",
+    "filename": "kill-useEffect.en.mdx"
+  },
+  {
     "route": "react-pdf",
     "title": "Générer pdf avec React",
     "description": "C'est possible de générer des pdf avec React",
@@ -40,12 +47,5 @@
     "description": "Intro éclair à Remix",
     "language": "fr",
     "filename": "remix.fr.mdx"
-  },
-  {
-    "title": "Test",
-    "description": "These are test slides",
-    "language": "en",
-    "route": "test",
-    "filename": "test.en.mdx"
   }
 ]

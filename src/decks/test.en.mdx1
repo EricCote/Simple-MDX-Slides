@@ -25,12 +25,13 @@ You will need to type the following commands from the system command line tool (
 To manage the installation of **Node.js**, we use a special installer called **nvm** (node version manager)
 
 {/* prettier-ignore */}
-- Check if a recent version of nvm is installed:
+- Workaround
+- Check if a recent version of nvm is installed
   - Use the command line `> nvm version` _(pc)_ `$ nvm -v` _(mac)_
     - Should be v0.39.3 or greater on MacOS
     - Should be 1.1.10 or greater on Windows PCs
 
-- If you need to update or install **nvm** on your machine:
+- If you need to update or install **nvm** on your machine
   - First, uninstall **nvm** and **Node.js**
     - On Windows PCs, go to **Settings**, **Apps**, **Apps & features**.
       - Uninstall both **Node.js** and **NVM for Windows**
@@ -38,7 +39,6 @@ To manage the installation of **Node.js**, we use a special installer called **n
       - `$ rm -rf $NVM_DIR ~/.npm ~/.bower`
 
 - Install **nvm** on _Windows_ PC
-
   - Goto https://github.com/coreybutler/nvm-windows/releases/latest
   - At the bottom of the page, download **nvm-setup.zip**
   - Install **nvm** by running the installer

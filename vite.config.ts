@@ -21,7 +21,9 @@ const files = await readdir('src/decks', {
 });
 
 let results = [];
-for (const file of files.filter((f) => f.isDirectory() === false)) {
+for (const file of files.filter(
+  (f) => f.isDirectory() === false && f.name.endsWith('.mdx')
+)) {
   const f = await read('src/decks/' + file.name);
   matter(f);
 
