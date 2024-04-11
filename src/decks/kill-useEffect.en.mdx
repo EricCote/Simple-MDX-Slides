@@ -93,6 +93,7 @@ Effects are run right after the render (and after the cleanup function, if any)
   **Careful:** If an effect changes a state, this will create a rerender, which
   will create another effect, and so on. Infinite loop!
 </div>
+
 ---
 
 ## Usage:
@@ -106,8 +107,8 @@ useEffect(setup, dependencies?)
 
 Dependencies is an array that decides if we need to run the effect again
 
+- one or multiple changes: run effect
 - no changes: do not run effect
-- on or multiple changes: run effect
 
 If we don't have a dependency array, then the effect runs after each render
 
@@ -120,6 +121,14 @@ If we have an empty dependency array, then the effect runs once
 - Render and useEffect are run twice while in Dev (`<StrictMode/>`)
 - Can create unwanted re-renders if we are not careful
 - use Effect should only affect ONE thing only, harder to manage when multiple things are affected
+
+<hr />
+
+- Dependencies arrays are hard with strings, numbers and booleans
+  - But they are even harder with objects or arrays
+  - Comparison is done with referential equality (`Object.is()`)
+  - You cannot detect when content has changed
+  - Object and arrays need to be considered immutable
 
 ---
 
@@ -309,7 +318,7 @@ export default function App() {
   const currentPage = useSyncExternalStore(
     subscribeHashChange, // subscribe to changes
     () => window.location.hash, // read the value (client)
-    () => window?.location.hash // reand the value (server)
+    () => window?.location.hash // read the value (server)
   );
 
   return (
@@ -501,8 +510,8 @@ function subscribeHashChange(onHashChange) {
 export default function useHashChange() {
   return useSyncExternalStore(
     subscribeHashChange, // React won't resubscribe for as long as you pass the same function
-    () => window.location.hash, // How to ge value on client
-    () => window?.location.hash // How to get the value on the server
+    () => window.location.hash, // read value on client
+    () => window?.location.hash // read value on the server
   );
 }
 ```
@@ -884,3 +893,12 @@ button:focus-visible {
 ```
 
 </Sandpack>
+
+---
+
+## Questions?
+
+<img
+  src='/img/job.jpeg'
+  style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}
+/>
