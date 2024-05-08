@@ -1,0 +1,430 @@
+---
+route: react19-action
+title: Actions en React 19
+description: Nouvelles techniques pour gérer les Actions en React
+language: fr
+---
+
+# Actions en React 19
+
+Présentation par Éric Côté
+
+## [React Academy](https://www.reactAcademy.live)
+
+---
+
+### Eric Côté
+
+<img
+  src='https://www.reactacademy.live/static/20616643d8afc491bd4c1817ae69db63/5a6cd/Eric_Cote.webp'
+  alt='Eric Côté'
+  title='Eric Côté'
+  width='400px'
+/>
+
+- Débute avec les machines 8 bits (Commodore 64)
+- Formateur informatique depuis 2001 (.NET, C#, ASP.NET MVC, Sql Server, Azure)
+- Formateur en développement Open Source depuis 2018
+  - Javascript, TypeScript, React, GitHub, REST, Node, Express, Next, Remix, etc.
+- Formateur-Propriétaire de React Academy Live
+
+---
+
+### React Academy Live
+
+<div>
+
+<img
+  src='/img/logoReact.svg'
+  style={{ float: 'left', width: '300px', marginRight: '40px' }}
+/>
+
+Formations en entreprise, ainsi qu'en virtuel
+pour apprendre et maîtriser les technologies web modernes:
+**React, TypeScript, Next** et **Remix**.
+
+Offre de la formation depuis 2018.
+
+**Nouveau:** Nous avons remplacé CRA (Create-React-App) par **Vite**
+
+**Nouveau:** Nous utilisons maintenant **TypeScript** sur tous nos exemples (plutôt que JS)
+
+</div>
+
+---
+
+## Ancienne façon de gérer les actions
+
+<Sandpack  >
+
+```jsx src/App.js active
+import { useState } from 'react';
+import { redirect, updateName } from './util.js';
+
+export default function UpdateName({}) {
+  const [name, setName] = useState('');
+  const [error, setError] = useState(null);
+  const [isPending, setIsPending] = useState(false);
+
+  const handleSubmit = async () => {
+    setIsPending(true);
+    const error = await updateName(name);
+    setIsPending(false);
+    if (error) {
+      setError(error);
+      return;
+    }
+    redirect('/path');
+  };
+
+  return (
+    <div>
+      <input value={name} onChange={(event) => setName(event.target.value)} />
+      <button onClick={handleSubmit} disabled={isPending}>
+        Update
+      </button>
+      {error && <p>{error}</p>}
+    </div>
+  );
+}
+```
+
+```jsx src/util.js
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export function redirect(page) {
+  alert(`Should redirect to '${page}'`);
+}
+
+export async function updateName(name) {
+  await wait(1000);
+  if (name.length < 2) {
+    return 'Name too short';
+  }
+  alert(`Success updating name to '${name}'`);
+}
+```
+
+```json package.json hidden
+{
+  "dependencies": {
+    "react": "19.0.0-beta-6946ebe620-20240508",
+    "react-dom": "19.0.0-beta-6946ebe620-20240508",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+</Sandpack>
+
+---
+
+## Gérer l'état d'attente avec useTransition
+
+<Sandpack  >
+
+```jsx src/App.js active
+import { useState, useTransition } from 'react';
+import { redirect, updateName } from './util.js';
+
+export default function UpdateName({}) {
+  const [name, setName] = useState('');
+  const [error, setError] = useState(null);
+  const [isPending, startTransition] = useTransition();
+
+  const handleSubmit = () => {
+    startTransition(async () => {
+      const error = await updateName(name);
+      if (error) {
+        setError(error);
+        return;
+      }
+      redirect('/path');
+    });
+  };
+
+  return (
+    <div>
+      <input value={name} onChange={(event) => setName(event.target.value)} />
+      <button onClick={handleSubmit} disabled={isPending}>
+        Update
+      </button>
+      {error && <p>{error}</p>}
+    </div>
+  );
+}
+```
+
+```jsx src/util.js
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export function redirect(page) {
+  alert(`Should redirect to '${page}'`);
+}
+
+export async function updateName(name) {
+  await wait(1000);
+  if (name.length < 2) {
+    return 'Name too short';
+  }
+  alert(`Success updating name to '${name}'`);
+}
+```
+
+```json package.json hidden
+{
+  "dependencies": {
+    "react": "19.0.0-beta-6946ebe620-20240508",
+    "react-dom": "19.0.0-beta-6946ebe620-20240508",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+</Sandpack>
+
+---
+
+## Définir les Actions
+
+- Une **action**, c'est toute fonction qui utilise une transition async
+
+---
+
+## Pourquoi utiliser les Actions
+
+- État d'attente (Pending State): Permet d'avoir un état d'attente qui démarre au début de la requête et termine quand l'update final est complété
+
+- Mise à jour optimiste (Optimistic updates): Les Actions supportent le nouveau hook useOptimistic hook. Nous avons un feedback immédiat pendant que les requêtes sont traitées.
+
+- Gestion d'erreur (Error Handling): Permet d'afficher des "Error Boundaries" si une requête échoue, et reset aux valeurs originales.
+
+- Formulaires (Forms): les éléments `<form>` permettent de passer des fonctions à `action` et `formAction`. Cela utilise une action et fait un reset après la soumission.
+
+---
+
+## Form Actions et useActionState
+
+<Sandpack  >
+
+```jsx src/App.js active
+import { useState, useTransition, useActionState } from 'react';
+import { redirect, updateName } from './util.js';
+
+// Using <form> Actions and useActionState
+export default function ChangeName({ name, setName }) {
+  const [error, submitAction, isPending] = useActionState(
+    async (previousState, formData) => {
+      const error = await updateName(formData.get('name'));
+      if (error) {
+        return error;
+      }
+      redirect('/path');
+      return null;
+    },
+    null
+  );
+
+  return (
+    <form action={submitAction}>
+      <input type='text' name='name' />
+      <button type='submit' disabled={isPending}>
+        Update
+      </button>
+      {error && <p>{error}</p>}
+    </form>
+  );
+}
+```
+
+```jsx src/util.js
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export function redirect(page) {
+  alert(`Should redirect to '${page}'`);
+}
+
+export async function updateName(name) {
+  await wait(1000);
+  if (name.length < 2) {
+    return 'Name too short';
+  }
+  alert(`Success updating name to '${name}'`);
+}
+```
+
+```json package.json hidden
+{
+  "dependencies": {
+    "react": "19.0.0-beta-6946ebe620-20240508",
+    "react-dom": "19.0.0-beta-6946ebe620-20240508",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+</Sandpack>
+
+---
+
+## useActionState en détail
+
+```jsx
+const [state, submitAction, isPending] = useActionState(
+  async (previousState, newName) => {
+    const data = await updateName(newName);
+    if (data.error) {
+      // You can return any result of the action.
+      // Here, we return the state.
+      return data;
+    }
+
+    // handle success
+    return data;
+  },
+  null
+);
+```
+
+---
+
+## Actions avec `<form>`
+
+On peut passer des **actions** et **formAction** à `<form>`, `<input>` et `<button>`
+
+```jsx
+<form action={actionFunction}>
+```
+
+Quand l'action réussit, React fait un reset des composants non-controllés.
+
+On peut appeler `requestFormReset` pour forcer un reset.
+
+---
+
+## useFormStatus
+
+`useFormStatus` retourne l'état du `<form>` parent le plus proche (similaire au Context Provider)
+
+```jsx
+import { useFormStatus } from 'react-dom';
+
+function DesignButton() {
+  const { pending } = useFormStatus();
+  return <button type='submit' disabled={pending} />;
+}
+```
+
+```jsx
+const { pending, data, method, action } = useFormStatus();
+```
+
+---
+
+### UseOptimistic
+
+<Sandpack  >
+
+```jsx src/App.js active
+import { useState, useTransition, useActionState, useOptimistic } from 'react';
+import { redirect, updateName } from './util.js';
+
+export default function App() {
+  const [name, setName] = useState('');
+  return <ChangeName currentName={name} onUpdateName={setName} />;
+}
+
+// Using useOptimistic
+function ChangeName({ currentName, onUpdateName }) {
+  const [optimisticName, setOptimisticName] = useOptimistic(currentName);
+
+  const submitAction = async (formData) => {
+    const newName = formData.get('name');
+    setOptimisticName(newName);
+    const updatedName = await updateName(newName);
+    onUpdateName(updatedName);
+  };
+
+  return (
+    <form action={submitAction}>
+      <p>Your name is: {optimisticName}</p>
+      <p>
+        <label>Change Name:</label>
+        <input
+          type='text'
+          name='name'
+          disabled={currentName !== optimisticName}
+        />
+      </p>
+    </form>
+  );
+}
+```
+
+```jsx src/util.js
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export function redirect(page) {
+  alert(`Should redirect to '${page}'`);
+}
+
+export async function updateName(name) {
+  await wait(1000);
+  alert(`Success updating name to '${name}'`);
+  return name;
+}
+```
+
+```json package.json hidden
+{
+  "dependencies": {
+    "react": "19.0.0-beta-6946ebe620-20240508",
+    "react-dom": "19.0.0-beta-6946ebe620-20240508",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+</Sandpack>
+
+---
+
+### Utilisation de use Optimistic
+
+Pendant le `action` du `<form>`, le `setState` est cédulé pour la toute fin du action
+
+Pour permettre de céduler des render **avant** la fin du action, on utilise `useOptimistic`
+
+La portée de `useOptimistic` est le temps d'appeler `action`. Après que `action` complète, cela reset.

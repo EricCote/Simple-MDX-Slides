@@ -42,6 +42,13 @@
     "filename": "react-router.fr.mdx"
   },
   {
+    "route": "react19-action",
+    "title": "Actions en React 19",
+    "description": "Nouvelles techniques pour gérer les Actions en React",
+    "language": "fr",
+    "filename": "react19-action.fr.mdx"
+  },
+  {
     "route": "remix",
     "title": "Intro à Remix",
     "description": "Intro éclair à Remix",
