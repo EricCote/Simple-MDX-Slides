@@ -314,15 +314,21 @@ const [state, submitAction, isPending] = useActionState(
 
 ## Actions avec `<form>`
 
-On peut passer des **actions** et **formAction** à `<form>`, `<input>` et `<button>`
+On peut passer **action** à `<form>`.
 
 ```jsx
 <form action={actionFunction}>
 ```
 
+On peut passer **formAction** à `<input>` et `<button>` ce qui modifie le **action** du `<form>` parent.
+
+```jsx
+<input type='submit' formAction={actionFunction} />
+```
+
 Quand l'action réussit, React fait un reset des composants non-controllés.
 
-On peut appeler `requestFormReset` pour forcer un reset.
+On peut appeler `requestFormReset()` pour forcer un reset.
 
 ---
 
@@ -342,6 +348,74 @@ function DesignButton() {
 ```jsx
 const { pending, data, method, action } = useFormStatus();
 ```
+
+---
+
+## useFormStatus
+
+<Sandpack  >
+
+```jsx src/App.js active
+import { useState, useTransition, useActionState, useOptimistic } from 'react';
+import { useFormStatus } from 'react-dom';
+import { redirect, updateName } from './util.js';
+
+export default function ChangeName() {
+  async function submitAction(formData) {
+    const data = await updateName(formData.get('name'));
+  }
+
+  return (
+    <form action={submitAction}>
+      <Status />
+      <p>
+        <label>Change Name: </label>
+        <input type='text' name='name' />
+        <button>Submit</button>
+      </p>
+    </form>
+  );
+}
+
+function Status() {
+  const { pending } = useFormStatus();
+  return pending ? <p>Pending...</p> : <p>Done!</p>;
+}
+```
+
+```jsx src/util.js
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export function redirect(page) {
+  alert(`Should redirect to '${page}'`);
+}
+
+export async function updateName(name) {
+  await wait(1000);
+  alert(`Success updating name to '${name.toUpperCase()}'`);
+  return name.toUpperCase();
+}
+```
+
+```json package.json hidden
+{
+  "dependencies": {
+    "react": "19.0.0-beta-6946ebe620-20240508",
+    "react-dom": "19.0.0-beta-6946ebe620-20240508",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+</Sandpack>
 
 ---
 
@@ -428,3 +502,93 @@ Pendant le `action` du `<form>`, le `setState` est cédulé pour la toute fin du
 Pour permettre de céduler des render **avant** la fin du action, on utilise `useOptimistic`
 
 La portée de `useOptimistic` est le temps d'appeler `action`. Après que `action` complète, cela reset.
+
+---
+
+## Combiner les technologies
+
+<Sandpack  >
+
+```jsx src/App.js active
+import { useState, useTransition, useActionState, useOptimistic } from 'react';
+import { useFormStatus } from 'react-dom';
+import { redirect, updateName } from './util.js';
+
+export default function App() {
+  const [name, setName] = useState('');
+  return <ChangeName currentName={name} onUpdateName={setName} />;
+}
+
+// Using useOptimistic
+function ChangeName({ currentName, onUpdateName }) {
+  const [optimisticName, setOptimisticName] = useOptimistic(currentName);
+
+  const [data, submitAction, isPending] = useActionState(
+    async (previousState, formData) => {
+      const newName = formData.get('name');
+      setOptimisticName(newName);
+      const data = await updateName(newName);
+      if (data.error) {
+        return data.error;
+      }
+      onUpdateName(data);
+      return data;
+    },
+    null
+  );
+
+  return (
+    <form action={submitAction}>
+      <Status />
+      <p>Your name is: {optimisticName}</p>
+      <p>
+        <label>Change Name:</label>
+        <input
+          type='text'
+          name='name'
+          disabled={currentName !== optimisticName}
+        />
+      </p>
+    </form>
+  );
+}
+
+function Status() {
+  const { pending } = useFormStatus();
+  return pending ? <p>Pending...</p> : <p>Done!</p>;
+}
+```
+
+```jsx src/util.js
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export function redirect(page) {
+  alert(`Should redirect to '${page}'`);
+}
+
+export async function updateName(name) {
+  await wait(1000);
+  alert(`Success updating name to '${name.toUpperCase()}'`);
+  return name.toUpperCase();
+}
+```
+
+```json package.json hidden
+{
+  "dependencies": {
+    "react": "19.0.0-beta-6946ebe620-20240508",
+    "react-dom": "19.0.0-beta-6946ebe620-20240508",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+</Sandpack>
