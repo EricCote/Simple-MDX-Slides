@@ -447,12 +447,13 @@ function ChangeName({ currentName, onUpdateName }) {
     <form action={submitAction}>
       <p>Your name is: {optimisticName}</p>
       <p>
-        <label>Change Name:</label>
+        <label>Change Name: </label>
         <input
           type='text'
           name='name'
           disabled={currentName !== optimisticName}
         />
+        <button>Submit</button>
       </p>
     </form>
   );
@@ -542,12 +543,13 @@ function ChangeName({ currentName, onUpdateName }) {
       <Status />
       <p>Your name is: {optimisticName}</p>
       <p>
-        <label>Change Name:</label>
+        <label>Change Name: </label>
         <input
           type='text'
           name='name'
           disabled={currentName !== optimisticName}
         />
+        <button>Submit</button>
       </p>
     </form>
   );
