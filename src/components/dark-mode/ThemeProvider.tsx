@@ -11,7 +11,7 @@ import {
 
 interface ThemeItem {
   name: string;
-  icon: ElementType<any> | string;
+  icon: ReactNode;
 }
 interface ThemeContextType {
   theme: string;
@@ -28,7 +28,7 @@ interface ThemeProviderProps {
 
 interface LocalThemeProps {
   theme: string;
-  as?: ElementType<any>;
+  as?: ElementType;
   children: ReactNode;
   otherProps?: [];
 }
