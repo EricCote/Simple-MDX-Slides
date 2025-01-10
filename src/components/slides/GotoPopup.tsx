@@ -4,6 +4,7 @@ import {
   ChangeEvent,
   FormEvent,
   RefObject,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -63,6 +64,13 @@ function GotoPopup() {
     // is done. A delay of 500 ms is good enough
     setTimeout(() => changePage(`#s${page}`), 500);
   }
+
+  const t = useCallback(
+    (str: string) => {
+      return textes[lang!][str];
+    },
+    [lang]
+  );
 
   function changePage(page: string) {
     location.assign(page);
@@ -125,7 +133,7 @@ function GotoPopup() {
     } else {
       location.hash = '';
     }
-  }, []);
+  }, [t]);
 
   //If we've just started re-rendering after starting to show the popup, set the focus.
   useEffect(() => {
@@ -137,12 +145,8 @@ function GotoPopup() {
     }
   }, [show]);
 
-  function t(str: string) {
-    return textes[lang!][str];
-  }
-
   return (
-    (<Modal
+    <Modal
       show={show}
       onHide={handleClose}
       autoFocus={false}
@@ -182,7 +186,7 @@ function GotoPopup() {
           </Button>
         </Modal.Footer>
       </Form>
-    </Modal>)
+    </Modal>
   );
 }
 
