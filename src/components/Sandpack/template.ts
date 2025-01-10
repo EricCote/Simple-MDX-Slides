@@ -4,10 +4,8 @@ export const template = {
     code: `import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
-
 import App from "./App";
 
-console.clear(true);
 
 const root = createRoot(document.getElementById("root"));
 root.render(
@@ -20,7 +18,7 @@ root.render(
     hidden: true,
     code: JSON.stringify(
       {
-        name: 'react.dev',
+        name: 'reactacademy.live',
         version: '0.0.0',
         main: '/src/index.js',
         scripts: {
@@ -30,8 +28,8 @@ root.render(
           eject: 'react-scripts eject',
         },
         dependencies: {
-          react: '^18.0.0',
-          'react-dom': '^18.0.0',
+          react: '^19.0.0',
+          'react-dom': '^19.0.0',
           'react-scripts': '^5.0.0',
         },
       },
@@ -52,5 +50,89 @@ root.render(
   <div id="root"></div>
 </body>
 </html>`,
+  },
+};
+
+export const templateV18 = {
+  ...template,
+  '/package.json': {
+    hidden: true,
+    code: JSON.stringify(
+      {
+        name: 'reactacademy.live',
+        version: '0.0.0',
+        main: '/src/index.js',
+        scripts: {
+          start: 'react-scripts start',
+          build: 'react-scripts build',
+          test: 'react-scripts test --env=jsdom',
+          eject: 'react-scripts eject',
+        },
+        dependencies: {
+          react: '^18.0.0',
+          'react-dom': '^18.0.0',
+          'react-scripts': 'latest',
+        },
+      },
+      null,
+      2
+    ),
+  },
+};
+
+export const templateV19 = {
+  ...template,
+  '/package.json': {
+    hidden: true,
+    code: JSON.stringify(
+      {
+        name: 'reactacademy.live',
+        version: '0.0.0',
+        main: '/src/index.js',
+        scripts: {
+          start: 'react-scripts start',
+          build: 'react-scripts build',
+          test: 'react-scripts test --env=jsdom',
+          eject: 'react-scripts eject',
+        },
+        dependencies: {
+          react: '^19.0.0',
+          'react-dom': '^19.0.0',
+          'react-scripts': 'latest',
+        },
+      },
+      null,
+      2
+    ),
+  },
+};
+
+export const templateHtml = {
+  ...template,
+  '/src/index.js': {
+    hidden: true,
+    code: `
+import "./styles.css";
+import "./App.js";
+`,
+  },
+  '/src/display.js': {
+    hidden: true,
+    code: `
+const pre = document.createElement('pre');
+root.appendChild(pre);
+pre.setAttribute('style', 'font-size: 1.2em');
+
+export default function display(txt) {
+  const txtNode = document.createTextNode(txt + '\\n');
+  pre.appendChild(txtNode);
+}
+
+export function displayJson(obj, indent) {
+  const txtNode = document.createTextNode(JSON.stringify(obj, null, indent) + '\\n');
+  pre.appendChild(txtNode);
+}
+
+`,
   },
 };

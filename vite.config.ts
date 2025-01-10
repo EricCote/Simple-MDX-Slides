@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm';
 import path from 'path';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
-import rehypePrism from './src/components/Codeblock-prism/rehype-prism';
+import rehypePretty from './src/components/Codeblock-pretty/rehype-pretty';
 import { rehypeSimpleSlides } from './src/components/slides/rehype-simple-slides';
 import { read } from 'to-vfile';
 import { matter } from 'vfile-matter';
@@ -13,6 +13,7 @@ import { readdir, writeFile } from 'node:fs/promises';
 
 interface FileName {
   filename: string;
+  date: string;
 }
 
 const files = await readdir('src/decks', {
@@ -20,20 +21,29 @@ const files = await readdir('src/decks', {
   withFileTypes: true,
 });
 
-let results = [];
-for (const file of files.filter(
-  (f) => f.isDirectory() === false && f.name.endsWith('.mdx')
-)) {
+let results: FileName[] = [] as FileName[];
+for (const file of files.filter((f) => f.isDirectory() === false)) {
   const f = await read('src/decks/' + file.name);
   matter(f);
 
   (f.data.matter as FileName).filename = file.name;
-  results.push(f.data.matter);
+
+  results.push(f.data.matter as FileName);
 }
 
-writeFile('src/slidedecks.json', JSON.stringify(results, null, 2));
+const sortedResults = results
+  .toSorted(function compareFn(a, b) {
+    if (!a.date || a.date < b.date) {
+      return -1;
+    } else if (a.date > b.date) {
+      return 1;
+    }
+    // a must be equal to b
+    return 0;
+  })
+  .toReversed();
 
-//console.log(file.data.matter);
+writeFile('src/slidedecks.json', JSON.stringify(sortedResults, null, 2));
 
 // https://vitejs.dev/config
 export default defineConfig(
@@ -50,7 +60,16 @@ export default defineConfig(
             [remarkMdxFrontmatter],
           ],
           rehypePlugins: [
-            rehypePrism,
+            [
+              rehypePretty,
+              {
+                defaultLang: 'js',
+                theme: {
+                  dark: 'dark-plus',
+                  light: 'catppuccin-latte',
+                },
+              },
+            ],
             [
               rehypeSimpleSlides,
               {
@@ -64,6 +83,22 @@ export default defineConfig(
       },
       react(),
     ],
+    // Les options de CSS permettent de compiler le SASS
+    // de bootstrap sans erreurs
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+          silenceDeprecations: [
+            'import',
+            'mixed-decls',
+            'legacy-js-api',
+            'global-builtin',
+            'color-functions',
+          ],
+        },
+      },
+    },
     server: {
       headers: {
         // 'Content-Security-Policy': `object-src * ; img-src *`,
@@ -73,7 +108,6 @@ export default defineConfig(
       preserveSymlinks: true,
       alias: {
         '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
-        '~prism-themes': path.resolve(__dirname, 'node_modules/prism-themes'),
       },
     },
   }

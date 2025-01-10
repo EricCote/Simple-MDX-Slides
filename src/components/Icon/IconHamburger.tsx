@@ -2,7 +2,7 @@
  * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
-import {memo} from 'react';
+import { memo, type JSX } from 'react';
 
 export const IconHamburger = memo<JSX.IntrinsicElements['svg']>(
   function IconHamburger(props) {

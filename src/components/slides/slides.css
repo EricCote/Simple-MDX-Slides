@@ -140,18 +140,6 @@ article > :first-child > h1 {
   font-size: 2.5em;
 }
 
-code {
-  color: darkslateblue;
-}
-
-.refractor-marker {
-  background-color: rgb(52, 58, 64);
-}
-
-tr:hover {
-  background-color: lightgray;
-}
-
 .dark-image {
   display: none;
 }
@@ -172,10 +160,75 @@ tr:hover {
   background-color: darkslategrey;
 }
 
-[data-bs-theme='dark'] code {
-  color: lightgreen;
-}
-
 [title='Open in CodeSandbox'] > span {
   display: none;
 }
+
+pre {
+  padding: 0.5rem 0;
+  overflow-x: auto;
+}
+
+pre [data-line] {
+  padding: 0 0.5rem;
+}
+
+code[data-theme*=' '],
+code[data-theme*=' '] span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+[data-bs-theme='dark'] code[data-theme*=' '],
+[data-bs-theme='dark'] code[data-theme*=' '] span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+span[data-line]:hover,
+span[data-line]:hover > span {
+  background-color: rgb(191, 208, 163) !important;
+}
+
+[data-bs-theme='dark'] span[data-line]:hover,
+[data-bs-theme='dark'] span[data-line]:hover > span {
+  background-color: rgb(50, 62, 31) !important;
+}
+
+code span[data-highlighted-line],
+code span[data-highlighted-line] span {
+  background-color: #e3e3e3;
+}
+
+[data-bs-theme='dark'] code span[data-highlighted-line],
+[data-bs-theme='dark'] code span[data-highlighted-line] span {
+  background-color: #1f3131;
+}
+
+code {
+  counter-reset: line;
+}
+
+code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+
+  /* Other styling */
+  display: inline-block;
+  width: 1rem;
+  margin-right: 2rem;
+  text-align: right;
+  color: gray;
+}
+
+code[data-line-numbers-max-digits='2'] > [data-line]::before {
+  width: 2rem;
+}
+
+code[data-line-numbers-max-digits='3'] > [data-line]::before {
+  width: 3rem;
+}
+
+/* pre > code {
+  background-color: red;
+} */

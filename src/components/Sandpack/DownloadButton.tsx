@@ -5,7 +5,9 @@
 import { useSyncExternalStore } from 'react';
 import { useSandpack } from '@codesandbox/sandpack-react/unstyled';
 import { IconDownload } from '../Icon/IconDownload';
-export interface DownloadButtonProps {}
+export interface DownloadButtonProps {
+  providedFiles: Array<string>;
+}
 
 let supportsImportMap = false;
 
@@ -34,11 +36,7 @@ function useSupportsImportMap() {
 
 const SUPPORTED_FILES = ['/App.js', '/styles.css'];
 
-export function DownloadButton({
-  providedFiles,
-}: {
-  providedFiles: Array<string>;
-}) {
+export function DownloadButton({ providedFiles }: DownloadButtonProps) {
   const { sandpack } = useSandpack();
   const supported = useSupportsImportMap();
   if (!supported) {

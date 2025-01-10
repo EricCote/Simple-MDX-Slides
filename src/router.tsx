@@ -14,7 +14,7 @@ const components = {
   Sandpack,
   Diagram,
   Illustration,
-  TwoColumns({ className, children, style }: any) {
+  TwoColumns({ className, children, style, top = false }: any) {
     return (
       <aside
         className={className}
@@ -22,7 +22,7 @@ const components = {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
           columnGap: 10,
-          alignItems: 'center',
+          alignItems: top ? 'top' : 'center',
           ...style,
         }}
       >
@@ -131,7 +131,7 @@ function MyLoader() {
         });
         return module;
       }),
-    [subject, doc, lang]
+    [subject, doc, lang, subfolder, subsubfolder]
   );
 
   return (
@@ -150,7 +150,7 @@ function Language() {
   const { lang } = useParams();
   const [, setLanguage] = useLanguage();
 
-  useEffect(() => setLanguage(lang ?? 'en'), [lang]);
+  useEffect(() => setLanguage(lang ?? 'en'), [lang, setLanguage]);
 
   return (
     <>

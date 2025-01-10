@@ -1,6 +1,13 @@
 // This creates a "goto" popup when the user presses the letter G.
 // The popup prompts a slide number, and navigates to it.
-import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import DarkModeMenu from '../dark-mode/DarkModeMenu';
 import { useLanguage } from './LanguageProvider';
@@ -19,24 +26,28 @@ const textes: TranslationObject = {
     slideNum: 'Numéro de Diapositive',
     cancel: 'Annuler',
     goto: 'Aller à la diapositive',
+    of: ' de ',
   },
   en: {
     dark: 'Dark Mode',
     slideNum: 'Slide Number',
     cancel: 'Cancel',
     goto: 'Go to Slide',
+    of: ' of ',
   },
 };
 
 //this flag will only register the event handler once when in StrictMode (dev mode)
 let isEventRegistered = false;
 
+const options = { capture: true };
+
 function GotoPopup() {
   const [show, setShow] = useState<boolean>(false);
-  const txtNombre = useRef<HTMLInputElement>();
+  const [num, setNum] = useState<number>(+location.hash?.slice(2) || 1);
+  const [maxPages, setMaxPages] = useState<number>(100);
+  const txtNombre = useRef<HTMLInputElement>(undefined);
   let [lang] = useLanguage();
-
-  let options = { capture: true };
 
   function handleClose() {
     setShow(false);
@@ -45,7 +56,7 @@ function GotoPopup() {
   function GotoPage(evt: FormEvent) {
     evt.preventDefault();
     //get the page number
-    const page = txtNombre.current!.value;
+    const page = num;
     setShow(false); // hide modal
     if (!Number.isInteger(+page)) return;
     // we need to change the page only once the fade animation
@@ -55,6 +66,10 @@ function GotoPopup() {
 
   function changePage(page: string) {
     location.assign(page);
+  }
+
+  function changeHandler(evt: ChangeEvent<HTMLInputElement>) {
+    setNum(+evt.target.value);
   }
 
   function handleKeyDown(evt: KeyboardEvent) {
@@ -89,9 +104,13 @@ function GotoPopup() {
       let div = document.createElement('div');
       div.innerHTML = (idx + 1).toString();
       div.className = 'corner-number';
+      div.title = (idx + 1).toString() + t('of') + results.length;
       slide.appendChild(div);
-      div.onclick = () => setShow(true);
+      div.onclick = () => {
+        setShow(true);
+      };
     });
+    setMaxPages(results.length);
 
     //Get the page number
     let pageRef: string = 's1';
@@ -102,7 +121,7 @@ function GotoPopup() {
     const focusedPage: HTMLFormElement = document.querySelector(`#${pageRef}`)!;
     if (focusedPage) {
       focusedPage.scrollIntoView({ behavior: 'instant' });
-      focusedPage?.focus();
+      focusedPage.focus();
     } else {
       location.hash = '';
     }
@@ -111,9 +130,10 @@ function GotoPopup() {
   //If we've just started re-rendering after starting to show the popup, set the focus.
   useEffect(() => {
     if (show) {
+      const article = document.querySelector('article')!;
+      setNum(Math.round(article.scrollLeft / article.clientWidth) + 1);
       txtNombre.current!.focus();
       txtNombre.current!.select();
-    } else {
     }
   }, [show]);
 
@@ -122,7 +142,12 @@ function GotoPopup() {
   }
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    (<Modal
+      show={show}
+      onHide={handleClose}
+      autoFocus={false}
+      restoreFocus={false}
+    >
       <Form onSubmit={GotoPage}>
         <Modal.Header closeButton>
           <Modal.Title>Menu</Modal.Title>
@@ -135,10 +160,18 @@ function GotoPopup() {
           <hr />
           <Form.Control
             type='number'
-            ref={txtNombre as RefObject<HTMLInputElement>}
+            ref={txtNombre as RefObject<HTMLInputElement | null>}
             placeholder={t('slideNum')}
-            defaultValue={location.hash?.slice(2) || '1'}
+            //defaultValue={location.hash?.slice(2) || '1'}
+            value={num}
+            onChange={changeHandler}
           />
+          <Form.Range
+            min={1}
+            max={maxPages}
+            value={num}
+            onChange={changeHandler}
+          ></Form.Range>
         </Modal.Body>
         <Modal.Footer>
           <Button variant='secondary' onClick={handleClose}>
@@ -149,7 +182,7 @@ function GotoPopup() {
           </Button>
         </Modal.Footer>
       </Form>
-    </Modal>
+    </Modal>)
   );
 }
 

@@ -12,10 +12,15 @@ import {
 //import { levelUp } from '@codesandbox/sandpack-themes';
 //import { SandpackLogLevel } from '@codesandbox/sandpack-client';
 //import { CustomPreset } from './CustomPreset';
-import { createFileMap, StylesCSSPath } from './createFileMap';
+import {
+  createFileMap,
+  StylesCSSPath,
+  AppJSPath,
+  AppJSXPath,
+} from './createFileMap';
 //import { CustomTheme } from './Themes';
 //import { useSandpackLint } from './useSandpackLint';
-import { template } from './template';
+import { template, templateV19, templateV18, templateHtml } from './template';
 
 type SandpackProps = {
   children: ReactNode;
@@ -23,6 +28,14 @@ type SandpackProps = {
   options?: SandpackOptions;
   files?: object;
   s?: number;
+  html?: boolean;
+  tailwind?: boolean;
+  daisy?: boolean;
+  bootstrap?: boolean;
+  leaflet?: boolean;
+  console?: boolean;
+  v18?: boolean;
+  v19?: boolean;
 };
 
 const sandboxStyle = `
@@ -78,10 +91,18 @@ ul {
 function SandpackRoot(props: SandpackProps) {
   let {
     children,
-    autorun = true,
+    // autorun = true,
     options: myOptions,
     files: additionalFiles,
     s,
+    html = false,
+    tailwind = false,
+    daisy = false,
+    bootstrap = false,
+    v19 = false,
+    v18 = false,
+    leaflet = false,
+    console = false,
     ...rest
   } = props;
   myOptions = myOptions ?? {};
@@ -90,6 +111,48 @@ function SandpackRoot(props: SandpackProps) {
   if (s) {
     myOptions = { editorWidthPercentage: s, ...myOptions };
   }
+
+  if (tailwind) {
+    myOptions = {
+      externalResources: ['https://cdn.tailwindcss.com'],
+      ...myOptions,
+    };
+  }
+
+  if (leaflet) {
+    myOptions = {
+      externalResources: ['https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'],
+      ...myOptions,
+    };
+  }
+
+  if (daisy) {
+    myOptions = {
+      externalResources: [
+        'https://cdn.tailwindcss.com',
+        'https://cdn.jsdelivr.net/npm/daisyui@4.12.13/dist/full.min.css',
+      ],
+      ...myOptions,
+    };
+  }
+
+  if (bootstrap) {
+    myOptions = {
+      externalResources: [
+        'https://cdn.jsdelivr.net/npm/bootstrap@latest/dist/css/bootstrap.min.css',
+      ],
+      ...myOptions,
+    };
+  }
+
+  if (console) {
+    myOptions = {
+      layout: 'console',
+      showConsoleButton: false,
+      ...myOptions,
+    };
+  }
+
   myOptions! = {
     // codeEditor: { extensions: [lintExtensions] },
     editorHeight: '500px',
@@ -97,7 +160,7 @@ function SandpackRoot(props: SandpackProps) {
     ...myOptions,
   };
 
-  const codeSnippets = Children.toArray(children) as ReactElement[];
+  const codeSnippets = Children.toArray(children) as ReactElement<any>[];
   let files = createFileMap(codeSnippets);
 
   if (additionalFiles) {
@@ -109,11 +172,32 @@ function SandpackRoot(props: SandpackProps) {
     hidden: !files[StylesCSSPath]?.visible,
   };
 
+  // To set the active file in the fallback we have to find the active files first.
+  // If there are no active files we fallback to App.js as default.
+  let activeFiles = Object.keys(files).filter(
+    (f) => files[f].active === true && files[f].hidden === false
+  );
+  if (!activeFiles.length) {
+    if (files[AppJSXPath]) {
+      files[AppJSXPath].active = true;
+    } else {
+      files[AppJSPath].active = true;
+    }
+  }
+
+  const templateUsed = v19
+    ? templateV19
+    : v18
+    ? templateV18
+    : html
+    ? templateHtml
+    : template;
+
   return (
     <div className='sandpack sandpack--playground w-full my-8' dir='ltr'>
       <Sandpack
         // template='react'
-        files={{ ...template, ...files }}
+        files={{ ...templateUsed, ...files }}
         theme={myDark}
         options={myOptions}
         customSetup={{

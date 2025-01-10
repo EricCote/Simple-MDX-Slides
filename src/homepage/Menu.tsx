@@ -1,5 +1,5 @@
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Link, useLocation } from 'react-router-dom';
 import DarkModeMenu from '../components/dark-mode/DarkModeMenu';
 import { LocalTheme } from '../components/dark-mode/ThemeProvider';
 

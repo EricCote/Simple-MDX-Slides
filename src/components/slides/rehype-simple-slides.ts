@@ -107,7 +107,7 @@ export default function generateSlides(rootNode: Root, options: Options) {
 }
 
 export function rehypeSimpleSlides(options: Options) {
-  return (rootNode: Root, file: any /* vfile */) => {
+  return (rootNode: Root /* file: any , vfile: any */) => {
     return generateSlides(rootNode, options);
   };
 }

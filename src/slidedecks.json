@@ -1,5 +1,21 @@
 [
   {
+    "route": "react-router-7",
+    "title": "What's new with React Router 7",
+    "description": "Short intro avout what is new with React Router 7",
+    "date": "2025-10-10",
+    "language": "en",
+    "filename": "react-router-7.en.mdx"
+  },
+  {
+    "title": "Test",
+    "description": "These are test slides",
+    "language": "en",
+    "route": "test",
+    "date": "2023-04-23",
+    "filename": "test.en.mdx"
+  },
+  {
     "route": "fundamentals",
     "title": "React Fundamentals",
     "description": "Your first steps with React",
@@ -26,6 +42,9 @@
     "description": "C'est possible de générer des pdf avec React",
     "language": "fr",
     "filename": "react-pdf.fr.mdx"
+  },
+  {
+    "filename": "react-router.css"
   },
   {
     "route": "react-router",

@@ -49,7 +49,7 @@ function formatStr(...inputArgs: any[]): any[] {
   if (args.length) {
     const REGEXP = /(%?)(%([jds]))/g;
 
-    formatted = formatted.replace(REGEXP, (match, escaped, ptn, flag) => {
+    formatted = formatted.replace(REGEXP, (match, escaped, _ptn, flag) => {
       let arg = args.shift();
       switch (flag) {
         case 's':
@@ -215,10 +215,10 @@ export const SandpackConsole = ({ visible }: { visible: boolean }) => {
                       } else {
                         try {
                           children = JSON.stringify(msg, null, 2);
-                        } catch (error) {
+                        } catch {
                           try {
                             children = Object.prototype.toString.call(msg);
-                          } catch (err) {
+                          } catch {
                             children = '[' + typeof msg + ']';
                           }
                         }

@@ -5,11 +5,15 @@
 import type { SandpackFile } from '@codesandbox/sandpack-react/unstyled';
 
 export const AppJSPath = `/src/App.js`;
+export const AppJSXPath = `/src/App.jsx`;
 export const StylesCSSPath = `/src/styles.css`;
 
 export const createFileMap = (codeSnippets: any) => {
   const myres = codeSnippets.reduce(
-    (result: Record<string, SandpackFile>, codeSnippet: React.ReactElement) => {
+    (
+      result: Record<string, SandpackFile>,
+      codeSnippet: React.ReactElement<any>
+    ) => {
       if (codeSnippet.type !== 'pre') {
         return result;
       }
@@ -29,14 +33,20 @@ export const createFileMap = (codeSnippets: any) => {
           fileActive = true;
         }
       } else {
-        if (props.className === 'language-js') {
-          filePath = AppJSPath;
-        } else if (props.className === 'language-css') {
-          filePath = StylesCSSPath;
-        } else {
-          throw new Error(
-            `Code block is missing a filename: ${props.children}`
-          );
+        switch (props.className) {
+          case 'language-js':
+            filePath = AppJSPath;
+            break;
+          case 'language-jsx':
+            filePath = AppJSXPath;
+            break;
+          case 'language-css':
+            filePath = StylesCSSPath;
+            break;
+          default:
+            throw new Error(
+              `Code block is missing a filename: ${props.children}`
+            );
         }
       }
       if (result[filePath]) {

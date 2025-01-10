@@ -11,6 +11,7 @@ interface DiagramProps {
   captionPosition: 'top' | 'bottom' | null;
 }
 
+/*
 function Caption({ text }: { text: string }) {
   return (
     <div className='w-full table'>
@@ -21,14 +22,18 @@ function Caption({ text }: { text: string }) {
   );
 }
 
+*/
+
 export function Diagram({
   name,
   alt,
   height,
   width,
+}: /* 
   children,
   captionPosition,
-}: DiagramProps) {
+*/
+DiagramProps) {
   return (
     <figure className='flex flex-col px-0 p-0 sm:p-10 first:mt-0 mt-10 sm:mt-0 justify-center items-center'>
       <div className='dark-image'>
