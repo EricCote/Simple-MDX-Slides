@@ -10,7 +10,6 @@
     "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none' ; img-src *; connect-src 'self' data:"
   },
   "mimeTypes": {
-    ".json": "text/json",
-    ".gltf": "model/gltf+json"
+    ".json": "text/json"
   }
 }
