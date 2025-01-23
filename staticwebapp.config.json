@@ -7,7 +7,7 @@
     "exclude": ["/img/*.{png,jpg,gif}", "/css/*"]
   },
   "globalHeaders": {
-    "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none' ; img-src *; connect-src data:"
+    "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none' ; img-src *; connect-src 'self' data:"
   },
   "mimeTypes": {
     ".json": "text/json",
