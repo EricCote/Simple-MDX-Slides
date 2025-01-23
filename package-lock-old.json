@@ -1072,7 +1072,7 @@
     },
     "node_modules/@react-academy-live/logo": {
       "version": "0.0.0",
-      "resolved": "git+ssh://git@github.com/ReactAcademyLive/Logo.git#a5ead27ff1e24210530016a11292476997c418df",
+      "resolved": "git+ssh://git@github.com/ReactAcademyLive/Logo.git#cb4d8316e4b71acb48c043a448b269dab1709ae1",
       "dependencies": {
         "@react-three/drei": "^10.0.0-rc.0",
         "@react-three/fiber": "^9.0.0-rc.5",

@@ -15,6 +15,7 @@
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.13.0",
     "@codesandbox/sandpack-themes": "^2.0.21",
+    "@react-academy-live/logo": "github:ReactAcademyLive/Logo",
     "bootstrap": "^5.3.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.7.2",
