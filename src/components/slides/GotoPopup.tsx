@@ -28,6 +28,7 @@ const textes: TranslationObject = {
     cancel: 'Annuler',
     goto: 'Aller à la diapositive',
     of: ' de ',
+    full: 'Mode plein écran',
   },
   en: {
     dark: 'Dark Mode',
@@ -35,6 +36,7 @@ const textes: TranslationObject = {
     cancel: 'Cancel',
     goto: 'Go to Slide',
     of: ' of ',
+    full: 'Full Screen Mode',
   },
 };
 
@@ -158,8 +160,18 @@ function GotoPopup() {
         </Modal.Header>
         <Modal.Body>
           <div className='d-flex flex-row'>
-            {t('dark')}
-            <DarkModeMenu className='ms-3' onChanged={handleClose} />
+            <Button
+              variant='secondary'
+              onClick={() => {
+                document.documentElement.requestFullscreen();
+              }}
+            >
+              {t('full')}
+            </Button>
+            <div className='ms-auto align-self-center d-flex flex-row'>
+              {t('dark')}
+              <DarkModeMenu className='ms-3' onChanged={handleClose} />
+            </div>
           </div>
           <hr />
           <Form.Control
