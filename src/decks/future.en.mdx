@@ -1,0 +1,1205 @@
+---
+route: future
+title: "React's future: Activities and Transitions"
+description: The React team is already working on features for a future version of React, including Activities and Transitions
+date: 2025-05-14
+language: en
+---
+
+# React's future
+
+<h2 style={{ fontSize: '1.5em' }}>Activities and Transitions</h2>
+
+### Presented by Eric Cote
+
+### [React Academy](https://www.reactAcademy.live/)
+
+---
+
+## Eric Côté
+
+<img
+  src='https://www.reactacademy.live/static/20616643d8afc491bd4c1817ae69db63/5a6cd/Eric_Cote.webp'
+  alt='Eric Côté'
+  title='Eric Côté'
+  width='400px'
+/>
+
+- Got started on 8-bits machines (Commodore 64)
+- Technical trainer since 2001 (.NET, C#, ASP.NET MVC Sql Server, Azure)
+- Training on Open Source dev technologies since 2018
+  - Javascript, TypeScript, React, GitHub, REST, Node, Express, Next, Remix, etc.
+- Trainer-Owner of React Academy Live
+
+---
+
+## React Academy Live
+
+import Logo from '@react-academy-live/logo';
+
+<div style={{height: "350px"}}>
+
+<Logo />
+
+</div>
+
+- Corporate training, developer training, virtual training
+- Need to master modern web technologies?
+- **React, TypeScript, Next** and **Remix**
+- Open since 2018
+- Multiple courses
+- **New:** CRA (Create-React-App) is now replaced by **Vite**
+- **New:** Samples and slides are rewritten for React 19.1
+
+---
+
+## The future of React
+
+<img
+  src='https://images.stockcake.com/public/c/8/f/c8f764d2-0b4c-4dde-b213-0acbfc60da0e_large/protected-industrial-worker-stockcake.jpg'
+  alt='HazMat'
+  width='30%'
+  style={{ float: 'left', marginRight: '50px' }}
+/>
+
+<div>
+
+- Activity and Transitions were announced in a recent React blog post
+- Part of a future version (20.0?)
+- Available **now** in `react@experimental{:bash}`
+- Final API will change (depending on feedback)
+- Client SPA features (not Server related)
+
+</div>
+
+---
+
+## View Transitions are hard
+
+- Component transition using React is hard
+- The typical React render model: the new state **replaces** the old state
+- But transitions must animate that replacement
+- While the transition is happening, the **two components** must be displayed: the previous one and the current one
+- Only when the transition is over, should React remove the old component
+- Transitions **break** React's render model
+
+<img
+  src='https://i.imgflip.com/4o76dn.png'
+  alt='Sad face'
+  height='30%'
+  style={{}}
+/>
+
+---
+
+## View Transition API
+
+- What if transitions were handled by a browser API?
+- No need for React to handle 2 states at once, the browser handles it instead
+- The name of that API: **View Transition API**
+
+---
+
+## Browser work
+
+- Handles loading and positioning of both the **old** and **new** content.
+- Animates the old and new components
+- Stops accidental user interactions with the old component
+- Removes old component once the transition is complete.
+- Accessibility is preserved (reading position, focus)
+- Compatible with SPA (single page apps) and MPA (multiple page apps)
+
+---
+
+## Using the View Transition API
+
+Using the DOM, here are the steps:
+
+- Trigger a transition with `document.startViewTransition(updateFn)`
+  - returns a `ViewTransition` object
+- This first captures snapshots of elements that have a `view-transition-name:{:css}` style declared on them
+- Then calls `updateFn()` (This updates the DOM and returns promise)
+  - `ViewTransition.updateCallbackDone` is called
+- Captures snapshots from the new view (live representation)
+  - `ViewTransition.ready` is called (for custom animation)
+- Animation runs (default: `opacity` creates a cross fade)
+  - `ViewTransition.finished` is called
+
+---
+
+# Using View Transitions with DOM
+
+<Sandpack  html  >
+
+```jsx src/App.js active
+import './style.css';
+
+document.getElementById('root').innerHTML = `
+    <h1 class="title">Basic View Transitions API demo</h1>
+    
+    <main>
+      <section class="thumbs"></section>
+      <section class="gallery-view">
+        <figure>
+          <img>
+          <figcaption><div class="caption-text"></div></figcaption>
+        </figure>
+      </section>
+    </main>
+`;
+
+const cdnURL = 'https://cdn.glitch.global/de7f29c8-57eb-4eb1-81b5-4e0d8565ade5';
+
+const imageData = [
+  {
+    name: 'Jungle coast',
+    file: 'jungle-coast',
+  },
+  {
+    name: 'Bird in the tree',
+    file: 'tree-bird',
+  },
+  {
+    name: 'A view from the sky',
+    file: 'view-from-the-sky',
+  },
+  {
+    name: 'The view across the water',
+    file: 'watery-view',
+  },
+];
+
+const thumbs = document.querySelector('.thumbs');
+const galleryImg = document.querySelector('.gallery-view img');
+const galleryCaption = document.querySelector('.gallery-view figcaption');
+
+function init() {
+  imageData.forEach((data) => {
+    const img = document.createElement('img');
+    const a = document.createElement('a');
+    a.href = '#';
+    a.title = `Click to load ${data.name} in main gallery view`;
+    img.alt = data.name;
+    img.src = `${cdnURL}/${data.file}_th.jpg`;
+    a.appendChild(img);
+    thumbs.appendChild(a);
+
+    a.addEventListener('click', updateView);
+    a.addEventListener('keypress', updateView);
+  });
+
+  galleryImg.src = `${cdnURL}/${imageData[0].file}.jpg`;
+  galleryCaption.textContent = imageData[0].name;
+}
+
+function updateView(event) {
+  // Handle the difference in whether the event is fired on the <a> or the <img>
+  let targetIdentifier;
+  if (event.target.firstChild === null) {
+    targetIdentifier = event.target;
+  } else {
+    targetIdentifier = event.target.firstChild;
+  }
+
+  const displayNewImage = () => {
+    const mainSrc = `${targetIdentifier.src.split('_th.jpg')[0]}.jpg`;
+    galleryImg.src = mainSrc;
+    galleryCaption.textContent = targetIdentifier.alt;
+  };
+
+  // Fallback for browsers that don't support View Transitions:
+  if (!document.startViewTransition) {
+    displayNewImage();
+    return;
+  }
+
+  // With View Transitions:
+  const transition = document.startViewTransition(() => displayNewImage());
+}
+init();
+```
+
+```css src/style.css
+main {
+  display: flex;
+}
+
+img {
+  border: 1px solid #999;
+}
+
+.thumbs img {
+  display: block;
+  margin: 10px;
+  border-radius: 7px;
+  opacity: 0.7;
+}
+
+a {
+  outline: 0;
+}
+
+.thumbs a:hover img,
+.thumbs a:focus img {
+  opacity: 1;
+}
+
+.thumbs img:first-child {
+  margin-top: 0px;
+}
+
+.gallery-view img {
+  max-width: 100%;
+  margin-right: 10px;
+  border-radius: 7px;
+}
+
+footer,
+figcaption {
+  position: absolute;
+  padding: 5px 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+footer {
+  bottom: 3px;
+  left: 3px;
+}
+
+figure {
+  position: relative;
+}
+
+figcaption {
+  top: 0px;
+  right: -2px;
+  border: 1px solid #999;
+  border-radius: 0 7px 0 7px;
+}
+
+/* text */
+
+h1,
+figcaption,
+a {
+  font-family: sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+/* media queries */
+
+@media (max-width: 980px) {
+  body {
+    width: 90%;
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    width: 98%;
+  }
+
+  main {
+    flex-direction: column;
+  }
+
+  .thumbs {
+    display: flex;
+    align-items: space-between;
+    justify-content: space-between;
+  }
+
+  .thumbs img {
+    margin: 0 0 10px 0;
+  }
+}
+
+/* View Transitions CSS */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+}
+
+figcaption {
+  view-transition-name: figure-caption;
+}
+
+/* Simple final style */
+
+::view-transition-old(figure-caption),
+::view-transition-new(figure-caption) {
+  height: 100%;
+}
+
+/* Alternative custom animation style */
+
+/*@keyframes grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes shrink-x {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+::view-transition-old(figure-caption),
+::view-transition-new(figure-caption) {
+  height: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  transform-origin: right center;
+}
+
+::view-transition-old(figure-caption) {
+  animation: 0.25s linear both shrink-x;
+}
+
+::view-transition-new(figure-caption) {
+  animation: 0.25s 0.25s linear both grow-x;
+} */
+```
+
+</Sandpack>
+
+---
+
+## What is an external system?
+
+Something not managed by React. React manages components, JSX, the rendering process and the rendering output (the virtual DOM).
+
+React can't use anything else:
+
+- Other libraries (jQuery, Angular, GraphJS, etc)
+- Data fetching
+- Browser APIs (History API, Navigation API, Location API, etc)
+
+Why? Because render functions must be pure, with NO side Effects.
+
+---
+
+## Effect run after a render
+
+Using useEffect will create an Effect
+
+Effects are run right after the render (and after the cleanup function, if any)
+
+<div class='alert alert-danger' role='alert'>
+  **Careful:** If an effect changes a state, this will create a rerender, which
+  will create another effect, and so on. Infinite loop!
+</div>
+
+---
+
+## Usage:
+
+```json
+useEffect(setup, dependencies?)
+```
+
+- Use the setup function to setup and connect to the outside system
+- Return an arrow function to disconnect
+
+Dependencies is an array that decides if we need to run the effect again
+
+- one or multiple changes: run effect
+- no changes: do not run effect
+
+If we don't have a dependency array, then the effect runs after each render
+
+If we have an empty dependency array, then the effect runs once
+
+---
+
+## useEffects are hard
+
+- Render and useEffect are run twice while in Dev (`<StrictMode/>`)
+- Can create unwanted re-renders if we are not careful
+- use Effect should only affect ONE thing only, harder to manage when multiple things are affected
+
+<hr />
+
+- Dependencies arrays are hard with strings, numbers and booleans
+  - But they are even harder with objects or arrays
+  - Comparison is done with referential equality (`Object.is()`)
+  - You cannot detect when content has changed
+  - Object and arrays need to be considered immutable
+
+---
+
+## The Goal
+
+"With time, the React team’s goal is to reduce the number of the Effects in your app to the minimum by providing more specific solutions to more specific problems. "
+
+[source](https://react.dev/learn/reusing-logic-with-custom-hooks#custom-hooks-help-you-migrate-to-better-patterns)
+
+---
+
+## Hash Routing
+
+<Sandpack options={{ showNavigator: true }} >
+
+```jsx src/App.js active
+import { useEffect, useState } from 'react';
+import Menu from './Menu';
+import Route from './Route';
+
+export default function App() {
+  const [currentPage, setCurrentPage] = useState(window.location.hash);
+
+  function changePage(evt) {
+    setCurrentPage(window.location.hash);
+  }
+
+  useEffect(() => {
+    //Handle the "hashchange" event
+    window.addEventListener('hashchange', changePage);
+    return () => window.removeEventListener('hashchange', changePage);
+  }, []);
+
+  return (
+    <>
+      <Menu />
+      <Route page={currentPage} />
+    </>
+  );
+}
+```
+
+```jsx src/Route.jsx
+import Home from './Home';
+import News from './News';
+import Contact from './Contact';
+
+export default function Route({ page }) {
+  switch (page) {
+    case '#home':
+    case '#':
+    case '':
+      return <Home />;
+    case '#news':
+      return <News />;
+    case '#contact':
+      return <Contact />;
+    default:
+      return <div>404 error</div>;
+  }
+}
+```
+
+```jsx src/Menu.jsx
+export default function Menu() {
+  return (
+    <ul className='menu'>
+      {menuList.map((menuItem) => (
+        <li key={menuItem.url}>
+          <a
+            className={menuItem.url === location.hash ? 'active' : ''}
+            href={menuItem.url}
+          >
+            {menuItem.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const menuList = [
+  {
+    name: 'Home',
+    url: '#',
+  },
+  {
+    name: 'News',
+    url: '#news',
+  },
+  {
+    name: 'Contact',
+    url: '#contact',
+  },
+  {
+    name: 'About',
+    url: '#about',
+  },
+];
+```
+
+```jsx src/Home.jsx
+export default function Home() {
+  return (
+    <>
+      <h1>Home page</h1>
+      <p>This is the Home page!</p>
+    </>
+  );
+}
+```
+
+```jsx src/News.jsx
+export default function News() {
+  return (
+    <>
+      <h1>News page</h1>
+      <p>This is the News page!</p>
+    </>
+  );
+}
+```
+
+```jsx src/Contact.jsx
+export default function Contact() {
+  return (
+    <>
+      <h1>Contact page</h1>
+      <p>This is the contact page!</p>
+    </>
+  );
+}
+```
+
+```css
+ul.menu {
+  list-style-type: none;
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.menu li {
+  float: left;
+}
+
+.menu li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.menu li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.menu .active {
+  background-color: royalblue;
+}
+```
+
+</Sandpack>
+
+---
+
+## Hash Routing with useSyncExternalStore
+
+<Sandpack options={{ showNavigator: true }} >
+
+```jsx src/App.js active
+import { useSyncExternalStore } from 'react';
+import Menu from './Menu';
+import Route from './Route';
+
+// Function subscribing to external changes
+// Similar to an effect subscription
+function subscribeHashChange(onHashChange) {
+  window.addEventListener('hashchange', onHashChange);
+  return () => window.removeEventListener('hashchange', onHashChange);
+}
+
+export default function App() {
+  const currentPage = useSyncExternalStore(
+    subscribeHashChange, // subscribe to changes
+    () => window.location.hash, // read the value (client)
+    () => window?.location.hash // read the value (server)
+  );
+
+  return (
+    <>
+      <Menu />
+      <Route page={currentPage} />
+    </>
+  );
+}
+```
+
+```jsx src/Route.jsx
+import Home from './Home';
+import News from './News';
+import Contact from './Contact';
+
+export default function Route({ page }) {
+  switch (page) {
+    case '#home':
+    case '#':
+    case '':
+      return <Home />;
+    case '#news':
+      return <News />;
+    case '#contact':
+      return <Contact />;
+    default:
+      return <div>404 error</div>;
+  }
+}
+```
+
+```jsx src/Menu.jsx
+export default function Menu() {
+  return (
+    <ul className='menu'>
+      {menuList.map((menuItem) => (
+        <li key={menuItem.url}>
+          <a
+            className={menuItem.url === location.hash ? 'active' : ''}
+            href={menuItem.url}
+          >
+            {menuItem.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const menuList = [
+  {
+    name: 'Home',
+    url: '#',
+  },
+  {
+    name: 'News',
+    url: '#news',
+  },
+  {
+    name: 'Contact',
+    url: '#contact',
+  },
+  {
+    name: 'About',
+    url: '#about',
+  },
+];
+```
+
+```jsx src/Home.jsx
+export default function Home() {
+  return (
+    <>
+      <h1>Home page</h1>
+      <p>This is the Home page!</p>
+    </>
+  );
+}
+```
+
+```jsx src/News.jsx
+export default function News() {
+  return (
+    <>
+      <h1>News page</h1>
+      <p>This is the News page!</p>
+    </>
+  );
+}
+```
+
+```jsx src/Contact.jsx
+export default function Contact() {
+  return (
+    <>
+      <h1>Contact page</h1>
+      <p>This is the contact page!</p>
+    </>
+  );
+}
+```
+
+```css
+ul.menu {
+  list-style-type: none;
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.menu li {
+  float: left;
+}
+
+.menu li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.menu li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.menu .active {
+  background-color: royalblue;
+}
+```
+
+</Sandpack>
+
+---
+
+## Hash Routing with a custom hook to wrap
+
+<Sandpack options={{ showNavigator: true }} >
+
+```jsx src/App.js active
+import useHashChange from './useHashChange';
+import Menu from './Menu';
+import Route from './Route';
+
+export default function App() {
+  const currentPage = useHashChange();
+
+  return (
+    <>
+      <Menu />
+      <Route page={currentPage} />
+    </>
+  );
+}
+```
+
+```jsx src/Route.jsx
+import Home from './Home';
+import News from './News';
+import Contact from './Contact';
+
+export default function Route({ page }) {
+  switch (page) {
+    case '#home':
+    case '#':
+    case '':
+      return <Home />;
+    case '#news':
+      return <News />;
+    case '#contact':
+      return <Contact />;
+    default:
+      return <div>404 error</div>;
+  }
+}
+```
+
+```jsx src/useHashChange.jsx
+import { useSyncExternalStore } from 'react';
+
+function subscribeHashChange(onHashChange) {
+  window.addEventListener('hashchange', onHashChange);
+  return () => window.removeEventListener('hashchange', onHashChange);
+}
+
+export default function useHashChange() {
+  return useSyncExternalStore(
+    subscribeHashChange, // React won't resubscribe for as long as you pass the same function
+    () => window.location.hash, // read value on client
+    () => window?.location.hash // read value on the server
+  );
+}
+```
+
+```jsx src/Menu.jsx
+export default function Menu() {
+  return (
+    <ul className='menu'>
+      {menuList.map((menuItem) => (
+        <li key={menuItem.url}>
+          <a
+            className={menuItem.url === location.hash ? 'active' : ''}
+            href={menuItem.url}
+          >
+            {menuItem.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const menuList = [
+  {
+    name: 'Home',
+    url: '#',
+  },
+  {
+    name: 'News',
+    url: '#news',
+  },
+  {
+    name: 'Contact',
+    url: '#contact',
+  },
+  {
+    name: 'About',
+    url: '#about',
+  },
+];
+```
+
+```jsx src/Home.jsx
+export default function Home() {
+  return (
+    <>
+      <h1>Home page</h1>
+      <p>This is the Home page!</p>
+    </>
+  );
+}
+```
+
+```jsx src/News.jsx
+export default function News() {
+  return (
+    <>
+      <h1>News page</h1>
+      <p>This is the News page!</p>
+    </>
+  );
+}
+```
+
+```jsx src/Contact.jsx
+export default function Contact() {
+  return (
+    <>
+      <h1>Contact page</h1>
+      <p>This is the contact page!</p>
+    </>
+  );
+}
+```
+
+```css
+ul.menu {
+  list-style-type: none;
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.menu li {
+  float: left;
+}
+
+.menu li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.menu li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.menu .active {
+  background-color: royalblue;
+}
+```
+
+</Sandpack>
+
+---
+
+## Near future
+
+- The `use()` Hook can be used with any promise, to fetch data
+- **Special:** does not need to be top Level like the other hooks.
+- Can be used in loops, conditionals and inner functions
+- Available in React 19
+
+---
+
+## Fetching with Effect
+
+<Sandpack >
+
+```jsx src/App.js active
+import { useState, useEffect } from 'react';
+import DisplayMovies from './DisplayMovies';
+
+export default function App() {
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+
+  async function getMovies() {
+    //get the data
+    setLoading(true);
+    const response = await fetch('https://mcuapi.herokuapp.com/api/v1/movies');
+    const data = await response.json();
+
+    //sort movies by release date
+    const sortedMovies = data.data.toSorted(
+      (a, b) =>
+        new Date(a.release_date).valueOf() - new Date(b.release_date).valueOf()
+    );
+
+    setMovies(sortedMovies);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getMovies();
+  }, []);
+
+  return (
+    <>
+      <h1>MCU Movies</h1>
+      <button onClick={getMovies}>Refresh Movies</button>
+      <DisplayMovies movies={movies} isLoading={isLoading} />
+    </>
+  );
+}
+```
+
+```jsx src/DisplayMovies.jsx
+export default function DisplayMovies({ movies, isLoading }) {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  return movies.length > 0 ? (
+    <div className='movieCards'>
+      {movies.map((movie) => (
+        <div key={movie.id}>
+          <h3>{movie.title}</h3>
+          <img src={movie.cover_url} />
+          <p>
+            <b>Release date: </b>
+            {new Date(movie.release_date).toLocaleDateString()}
+          </p>
+          <p>{movie.overview}</p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div>No movies yet</div>
+  );
+}
+```
+
+```css
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #d9d9d9;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin: 10px;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.movieCards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  row-gap: 20px;
+  column-gap: 20px;
+  justify-content: space-between;
+}
+
+.movieCards > div {
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 20px;
+  padding: 10px;
+  width: 300px;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.movieCards img {
+  float: left;
+  margin-right: 15px;
+  width: 200px;
+}
+```
+
+</Sandpack>
+
+---
+
+## Fetching with the future version of React
+
+<Sandpack >
+
+```jsx src/App.js active
+import { use, Suspense } from 'react';
+import DisplayMovies from './DisplayMovies';
+import useRefresh from './useRefresh';
+
+async function getMovies() {
+  const response = await fetch('https://mcuapi.herokuapp.com/api/v1/movies');
+  return response.json();
+}
+
+export default function App() {
+  const refresh = useRefresh();
+
+  return (
+    <>
+      <h1>MCU Movies</h1>
+      <button onClick={refresh}>Refresh Movies</button>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <Movies />
+      </Suspense>
+    </>
+  );
+}
+
+function Movies() {
+  const rawData = use(getMovies());
+  const movies = rawData.data.toSorted(
+    (a, b) =>
+      new Date(a.release_date).valueOf() - new Date(b.release_date).valueOf()
+  );
+
+  return <DisplayMovies movies={movies} />;
+}
+```
+
+```jsx src/useRefresh.jsx
+import { useState } from 'react';
+
+export default function useRefresh() {
+  const [, setRefresh] = useState();
+
+  function refresh() {
+    setRefresh({});
+  }
+
+  return refresh;
+}
+```
+
+```jsx src/DisplayMovies.jsx
+export default function DisplayMovies({ movies }) {
+  return movies.length > 0 ? (
+    <div className='movieCards'>
+      {movies.map((movie) => (
+        <div key={movie.id}>
+          <h3>{movie.title}</h3>
+          <img src={movie.cover_url} />
+          <p>
+            <b>Release date: </b>
+            {new Date(movie.release_date).toLocaleDateString()}
+          </p>
+          <p>{movie.overview}</p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div>No movies yet</div>
+  );
+}
+```
+
+```json package.json
+{
+  "dependencies": {
+    "react": "18.3.0-canary-ad720f36e-20240206",
+    "react-dom": "18.3.0-canary-ad720f36e-20240206",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+```css
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #d9d9d9;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin: 10px;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.movieCards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  row-gap: 20px;
+  column-gap: 20px;
+  justify-content: space-between;
+}
+
+.movieCards > div {
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 20px;
+  padding: 10px;
+  width: 300px;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.movieCards img {
+  float: left;
+  margin-right: 15px;
+  width: 200px;
+}
+```
+
+</Sandpack>
+
+---
+
+## Questions?
+
+<img
+  src='/img/job.jpeg'
+  style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}
+/>

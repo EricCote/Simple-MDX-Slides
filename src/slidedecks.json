@@ -1,9 +1,17 @@
 [
   {
+    "route": "future",
+    "title": "React's future: Activities and Transitions",
+    "description": "The React team is already working on features for a future version of React, including Activities and Transitions",
+    "date": "2025-05-14",
+    "language": "en",
+    "filename": "future.en.mdx"
+  },
+  {
     "route": "react-router-7",
     "title": "What's new with React Router 7",
     "description": "Short intro avout what is new with React Router 7",
-    "date": "2025-10-10",
+    "date": "2025-01-10",
     "language": "en",
     "filename": "react-router-7.en.mdx"
   },
