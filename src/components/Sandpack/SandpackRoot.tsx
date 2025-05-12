@@ -20,7 +20,13 @@ import {
 } from './createFileMap';
 //import { CustomTheme } from './Themes';
 //import { useSandpackLint } from './useSandpackLint';
-import { template, templateV19, templateV18, templateHtml } from './template';
+import {
+  template,
+  templateV19,
+  templateVExperimental,
+  templateV18,
+  templateHtml,
+} from './template';
 
 type SandpackProps = {
   children: ReactNode;
@@ -36,6 +42,7 @@ type SandpackProps = {
   console?: boolean;
   v18?: boolean;
   v19?: boolean;
+  vExperimental?: boolean;
 };
 
 const sandboxStyle = `
@@ -101,6 +108,7 @@ function SandpackRoot(props: SandpackProps) {
     bootstrap = false,
     v19 = false,
     v18 = false,
+    vExperimental = false,
     leaflet = false,
     console = false,
     ...rest
@@ -187,6 +195,8 @@ function SandpackRoot(props: SandpackProps) {
 
   const templateUsed = v19
     ? templateV19
+    : vExperimental
+    ? templateVExperimental
     : v18
     ? templateV18
     : html

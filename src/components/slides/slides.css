@@ -232,3 +232,17 @@ code[data-line-numbers-max-digits='3'] > [data-line]::before {
 /* pre > code {
   background-color: red;
 } */
+
+/* For smaller screens: remove some padding 
+   and reduce the size for the sandpack font */
+@media screen and (max-width: 576px) {
+  div#root {
+    padding: 0 0rem;
+  }
+  article > * {
+    padding: 0.5rem;
+  }
+  div.sp-wrapper {
+    --sp-font-size: 0.8rem;
+  }
+}

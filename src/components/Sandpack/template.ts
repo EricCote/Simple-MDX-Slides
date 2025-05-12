@@ -107,6 +107,33 @@ export const templateV19 = {
   },
 };
 
+export const templateVExperimental = {
+  ...template,
+  '/package.json': {
+    hidden: true,
+    code: JSON.stringify(
+      {
+        name: 'reactacademy.live',
+        version: '0.0.0',
+        main: '/src/index.js',
+        scripts: {
+          start: 'react-scripts start',
+          build: 'react-scripts build',
+          test: 'react-scripts test --env=jsdom',
+          eject: 'react-scripts eject',
+        },
+        dependencies: {
+          react: 'experimental',
+          'react-dom': 'experimental',
+          'react-scripts': 'latest',
+        },
+      },
+      null,
+      2
+    ),
+  },
+};
+
 export const templateHtml = {
   ...template,
   '/src/index.js': {
