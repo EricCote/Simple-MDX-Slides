@@ -43,6 +43,7 @@ type SandpackProps = {
   v18?: boolean;
   v19?: boolean;
   vExperimental?: boolean;
+  showStyles?: boolean;
 };
 
 const sandboxStyle = `
@@ -111,6 +112,7 @@ function SandpackRoot(props: SandpackProps) {
     vExperimental = false,
     leaflet = false,
     console = false,
+    showStyles = false,
     ...rest
   } = props;
   myOptions = myOptions ?? {};
@@ -177,7 +179,7 @@ function SandpackRoot(props: SandpackProps) {
 
   files[StylesCSSPath] = {
     code: [sandboxStyle, files[StylesCSSPath]?.code ?? ''].join('\n\n'),
-    hidden: !files[StylesCSSPath]?.visible,
+    hidden: !files[StylesCSSPath]?.visible && !showStyles,
   };
 
   // To set the active file in the fallback we have to find the active files first.
