@@ -24,6 +24,7 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
+LanguageContext.displayName = 'LanguageContext';
 
 export default function LanguageProvider({
   initialLanguage,
@@ -39,7 +40,7 @@ export default function LanguageProvider({
   }, [currentLanguage]);
 
   return (
-    <LanguageContext.Provider
+    <LanguageContext
       value={{
         currentLanguage,
         languageList,
@@ -48,7 +49,7 @@ export default function LanguageProvider({
       }}
     >
       {children}
-    </LanguageContext.Provider>
+    </LanguageContext>
   );
 }
 

@@ -28,7 +28,7 @@ interface ThemeProviderProps {
 
 interface LocalThemeProps {
   theme: string;
-  as?: ElementType;
+  as?: ElementType<any>;
   children: ReactNode;
   otherProps?: [];
 }
@@ -46,6 +46,7 @@ let defaultThemes: ThemeItem[] = [
 ];
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
+ThemeContext.displayName = 'ThemeContext';
 
 //Modifies the html root element
 function modifyDOM(theme: string) {
@@ -99,9 +100,9 @@ export default function ThemeProvider({
   }
 
   return (
-    <ThemeContext.Provider value={{ theme: mode, setTheme, themes }}>
+    <ThemeContext value={{ theme: mode, setTheme, themes }}>
       {children}
-    </ThemeContext.Provider>
+    </ThemeContext>
   );
 }
 

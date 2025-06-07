@@ -11,26 +11,26 @@ interface DiagramProps {
   captionPosition: 'top' | 'bottom' | null;
 }
 
-/*
 function Caption({ text }: { text: string }) {
   return (
-    <div className='w-full table'>
-      <figcaption className='p-1 sm:p-2 mt-0 sm:mt-0 text-gray-40 text-base lg:text-lg text-center leading-tight table-caption'>
+    <div className='mt-1'>
+      <figcaption
+        className='figure-caption fst-italic'
+        //className2='p-1 sm:p-2 mt-0 sm:mt-0 text-gray-40 text-base lg:text-lg text-center leading-tight table-caption'
+      >
         {text}
       </figcaption>
     </div>
   );
 }
 
-*/
-
 export function Diagram({
   name,
   alt,
   height,
   width,
-}: /* 
   children,
+}: /*
   captionPosition,
 */
 DiagramProps) {
@@ -38,7 +38,7 @@ DiagramProps) {
     <figure className='flex flex-col px-0 p-0 sm:p-10 first:mt-0 mt-10 sm:mt-0 justify-center items-center'>
       <div className='dark-image'>
         <img
-          src={`/images/docs/diagrams/${name}.dark.png`}
+          src={`/img/docs/diagrams/${name}.dark.png`}
           alt={alt}
           height={height}
           width={width}
@@ -46,12 +46,13 @@ DiagramProps) {
       </div>
       <div className='light-image'>
         <img
-          src={`/images/docs/diagrams/${name}.png`}
+          src={`/img/docs/diagrams/${name}.png`}
           alt={alt}
           height={height}
           width={width}
         />
       </div>
+      <Caption text={children} />
     </figure>
   );
 }

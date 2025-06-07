@@ -129,7 +129,7 @@ Using the DOM, here are the steps:
 
 ## Using View Transitions with DOM
 
-<Sandpack  html showStyles >
+<Sandpack  html  >
 
 ```jsx src/App.js active
 import { cdnURL, imageData } from './data';
@@ -150,7 +150,7 @@ document.getElementById('root').innerHTML = `
     </main>
 `;
 
-//--- get elements from DOM
+// get elements from DOM
 const thumbs = document.querySelector('.thumbs');
 const galleryImg = document.querySelector('.gallery-view img');
 const galleryCaption = document.querySelector('.gallery-view figcaption');
@@ -171,24 +171,26 @@ function init() {
     a.addEventListener('keypress', updateView);
   });
 
+  //Display the large photo using the first image
   galleryImg.src = `${cdnURL}/${imageData[0].file}.jpg`;
   galleryCaption.textContent = imageData[0].name;
 }
 
+//event handler when a thumnail image is clicked
 function updateView(event) {
-  // Handle the difference in whether the event is fired on the <a> or the <img>
+  // Handle the difference, whether the event is fired on the <a> or the <img> child tag
   let targetIdentifier;
   if (event.target.firstChild === null) {
-    targetIdentifier = event.target;
+    thumbnail = event.target;
   } else {
-    targetIdentifier = event.target.firstChild;
+    thumbnail = event.target.firstChild;
   }
 
   // function to modify the big image source and text
   const displayNewImage = () => {
-    const mainSrc = `${targetIdentifier.src.split('_th.jpg')[0]}.jpg`;
+    const mainSrc = `${thumbnail.src.split('_th.jpg')[0]}.jpg`;
     galleryImg.src = mainSrc;
-    galleryCaption.textContent = targetIdentifier.alt;
+    galleryCaption.textContent = thumbnail.alt;
   };
 
   // Fallback for browsers that don't support View Transitions:
@@ -229,7 +231,7 @@ const imageData = [
 export { cdnURL, imageData };
 ```
 
-```css src/styles.css
+```css src/styles.css hidden
 main {
   display: flex;
 }
@@ -496,13 +498,6 @@ Default cross-fade rules from the browser user-agent (extract)
 
 ---
 
-## When are effects running?
-
-- Effects will run AFTER the transition
-- Exception: if a transition is interrupting a running one, the Effect needs to run before the next transition (in case a state changes during an effect)
-
----
-
 ## Transition between different pages
 
 - In an MPA, you can use transitions between pages
@@ -548,12 +543,11 @@ const deferred = useDeferredValue(value);
 
 ## Classic React with NO Transitions
 
-<Sandpack  vExperimental showStyles >
+<Sandpack  vExperimental  >
 
 ```jsx src/App.jsx active
 import { useState } from 'react';
 import { cdnURL, imageData } from './data';
-import './transitions.css';
 
 export default function App() {
   const [photos, setPhotos] = useState(imageData);
@@ -715,63 +709,13 @@ h1 {
 }
 ```
 
-```css src/transitions.css
-/* View Transitions CSS */
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.5s;
-}
-
-figcaption {
-  view-transition-name: figure-caption;
-}
-
-/* Simple final style */
-
-::view-transition-old(figure-caption),
-::view-transition-new(figure-caption) {
-  height: 100%;
-}
-
-/* Alternative custom animation style */
-
-/*@keyframes grow-x {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-@keyframes shrink-x {
-  from { transform: scaleX(1); }
-  to { transform: scaleX(0); }
-}
-
-::view-transition-old(figure-caption),
-::view-transition-new(figure-caption) {
-  height: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: auto;
-  transform-origin: right center;
-}
-
-::view-transition-old(figure-caption) {
-  animation: 0.25s linear both shrink-x;
-}
-
-::view-transition-new(figure-caption) {
-  animation: 0.25s 0.25s linear both grow-x;
-} */
-```
-
 </Sandpack>
 
 ---
 
 ## React with Transitions
 
-<Sandpack  vExperimental showStyles  >
+<Sandpack  vExperimental   >
 
 ```jsx src/App.jsx active
 import {
@@ -808,10 +752,13 @@ export default function App() {
           ))}
         </section>
         <section className='gallery-view'>
-          <ViewTransition>
+          <ViewTransition default='rtl'>
             <figure>
               <img src={`${cdnURL}/${photos[currentIndex].file}.jpg`} />
-              <ViewTransition update='figure-caption'>
+              <ViewTransition
+                default='none'
+                //update='figure-caption'
+              >
                 <figcaption>
                   <div className='caption-text'>
                     {photos[currentIndex].name}
@@ -852,7 +799,7 @@ const imageData = [
 export { cdnURL, imageData };
 ```
 
-```css src/styles.css
+```css
 main {
   display: flex;
 }
@@ -953,43 +900,28 @@ h1 {
 ```css src/transitions.css
 /* View Transitions CSS */
 
-::view-transition-old(*) {
+/* the default transition will cross-fade in 0.25s */
+
+/* Block 1: modify all transitions with a fade and slide. */
+
+::view-transition-old(.rtl) {
+  animation-duration: 1s;
   animation-name: fadeOutLeft;
 }
 
-::view-transition-new(*) {
+::view-transition-new(.rtl) {
+  animation-duration: 1s;
   animation-name: fadeInRight;
 }
 
-/* Simple final style */
-
-::view-transition-old(.figure-caption),
-::view-transition-new(.figure-caption) {
-  height: 100%;
+/* ::view-transition-old(rtl) {
+  animation-duration: 1s;
+  animation-name: fadeOutLeft;
 }
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translate3d(100%, 0, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes fadeOutLeft {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-    transform: translate3d(-100%, 0, 0);
-  }
-}
+::view-transition-new(rtl) {
+  animation-duration: 1s;
+  animation-name: fadeInRight;
+} */
 
 /* Alternative custom animation style */
 
@@ -1014,12 +946,45 @@ h1 {
 }
 
 ::view-transition-old(.figure-caption) {
-  animation: 0.25s linear both shrink-x;
+  animation: 0.5s linear both shrink-x;
 }
 
 ::view-transition-new(.figure-caption) {
-  animation: 0.25s 0.25s linear both grow-x;
+  animation: 0.5s 0.5s linear both grow-x;
 } */
+
+/* 
+--------------------------------- 
+Different keyframes for animation
+---------------------------------
+*/
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes fadeOutRight {
+  to {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+}
+@keyframes fadeOutLeft {
+  to {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+}
 ```
 
 </Sandpack>
@@ -1051,6 +1016,13 @@ Other types of scenarios will not be needing transitions, but simply use animati
 
 ---
 
+## When are effects running?
+
+- Effects will run AFTER the transition
+- Exception: if a transition is interrupting a running one, the Effect needs to run before the next transition (in case a state changes during an effect)
+
+---
+
 ## Suspense
 
 This works with suspense and with deferred values
@@ -1067,7 +1039,7 @@ This works with suspense and with deferred values
 
 ## Reordering data
 
-<Sandpack vExperimental showStyles >
+<Sandpack vExperimental  >
 
 ```js src/Video.js
 function Thumbnail({ video }) {

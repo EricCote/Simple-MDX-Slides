@@ -1,6 +1,7 @@
 import Home from './homepage/Home';
 
 import Sandpack from './components/Sandpack';
+import SandpackWithHTMLOutput from './components/Sandpack/SandpackWithHTMLOutput';
 import Diagram from './components/slides/Diagram';
 import Illustration from './components/slides/Illustration';
 import { createBrowserRouter, Outlet, useParams } from 'react-router-dom';
@@ -12,8 +13,12 @@ import { useLanguage } from './components/slides/LanguageProvider';
 
 const components = {
   Sandpack,
+  SandpackWithHTMLOutput,
   Diagram,
   Illustration,
+  Alert({ type = 'primary', children }: { type: string; children: any }) {
+    return <div className={`alert alert-${type} px-5 py-4 `}>{children}</div>;
+  },
   TwoColumns({ className, children, style, top = false }: any) {
     return (
       <aside
@@ -21,7 +26,7 @@ const components = {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
-          columnGap: 10,
+          columnGap: '1em',
           alignItems: top ? 'top' : 'center',
           ...style,
         }}
@@ -56,11 +61,7 @@ const components = {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <>
-        <Outlet />
-      </>
-    ),
+    element: <Outlet />,
     //errorElement: <ErrorBoundary />,
 
     children: [

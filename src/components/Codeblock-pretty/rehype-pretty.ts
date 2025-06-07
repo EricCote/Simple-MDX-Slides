@@ -15,7 +15,11 @@ export default function rehypePretty(options = {}) {
   };
 
   function hideSandpackCode(node: any, _idx: any, parent: any) {
-    if (parent?.name == 'Sandpack' && node.tagName == 'pre') {
+    if (
+      (parent?.name == 'Sandpack' ||
+        parent?.name == 'SandpackWithHTMLOutput') &&
+      node.tagName == 'pre'
+    ) {
       node.properties.parent = 'Sandpack';
       node.tagName = 'preHidden';
     }

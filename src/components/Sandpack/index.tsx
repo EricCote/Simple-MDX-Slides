@@ -3,7 +3,7 @@
  */
 
 import { lazy, memo, Children, Suspense } from 'react';
-import { createFileMap, AppJSPath } from './createFileMap';
+import { createFileMap, AppJSPath, AppJSXPath } from './createFileMap';
 
 const SandpackRoot = lazy(() => import('./SandpackRoot'));
 
@@ -24,11 +24,10 @@ export default memo(function SandpackWrapper(props: any): any {
 
   let activeCode;
   if (!activeCodeSnippet.length) {
-    activeCode = codeSnippet[AppJSPath].code;
+    activeCode = codeSnippet[AppJSXPath]?.code || codeSnippet[AppJSPath]?.code;
   } else {
     activeCode = codeSnippet[activeCodeSnippet[0]].code;
   }
-  // console.log(activeCode);
 
   return (
     <Suspense fallback={<SandpackGlimmer code={activeCode} />}>
