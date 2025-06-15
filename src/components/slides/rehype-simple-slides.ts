@@ -3,7 +3,7 @@
 // These slides only go right-left, there are no special "drill-down" slides that go down-up
 // I added a slideType, so one could wrap a slide using <div>, <section>, <article>, <figure> or whatever
 
-import { Node, Element, Literal, Root } from 'hast';
+import { type Node, type Element, type Literal, type Root } from 'hast';
 
 interface Options {
   slideSeparators: string[];
