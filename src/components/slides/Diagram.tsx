@@ -3,7 +3,8 @@
  */
 
 interface DiagramProps {
-  name: string;
+  imgLight: string;
+  imgDark: string;
   alt: string;
   height: number;
   width: number;
@@ -25,7 +26,8 @@ function Caption({ text }: { text: string }) {
 }
 
 export function Diagram({
-  name,
+  imgLight,
+  imgDark,
   alt,
   height,
   width,
@@ -37,20 +39,10 @@ DiagramProps) {
   return (
     <figure className='flex flex-col px-0 p-0 sm:p-10 first:mt-0 mt-10 sm:mt-0 justify-center items-center'>
       <div className='dark-image'>
-        <img
-          src={`/img/docs/diagrams/${name}.dark.png`}
-          alt={alt}
-          height={height}
-          width={width}
-        />
+        <img src={imgDark} alt={alt} height={height} width={width} />
       </div>
       <div className='light-image'>
-        <img
-          src={`/img/docs/diagrams/${name}.png`}
-          alt={alt}
-          height={height}
-          width={width}
-        />
+        <img src={imgLight} alt={alt} height={height} width={width} />
       </div>
       <Caption text={children} />
     </figure>
