@@ -89,22 +89,7 @@ export default defineConfig(
       },
       react(),
     ],
-    // Les options de CSS permettent de compiler le SASS
-    // de bootstrap sans erreurs
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler',
-          silenceDeprecations: [
-            'import',
-            'mixed-decls',
-            'legacy-js-api',
-            'global-builtin',
-            'color-functions',
-          ],
-        },
-      },
-    },
+      
     server: {
       headers: {
         // 'Content-Security-Policy': `object-src * ; img-src *`,
