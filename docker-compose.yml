@@ -8,11 +8,15 @@ services:
       - "80"
     labels:
       - traefik.enable=true
+      # HTTP router (needed for ACME HTTP-01 challenge + redirect to HTTPS)
+      - traefik.http.routers.react-academy-http.rule=Host(`slides.reactacademy.live`)
+      - traefik.http.routers.react-academy-http.entrypoints=web
+      - traefik.http.routers.react-academy-http.middlewares=redirect-to-https@file
       # HTTPS router
       - traefik.http.routers.react-academy.rule=Host(`slides.reactacademy.live`)
       - traefik.http.routers.react-academy.entrypoints=websecure
       - traefik.http.routers.react-academy.tls.certresolver=letsencrypt
-      - traefik.http.services.react-academy.loadbalancer.server.port=80   
+      - traefik.http.services.react-academy.loadbalancer.server.port=80
     networks:
       - stack_backend
 
