@@ -1,15 +1,14 @@
 import Home from './homepage/Home';
-
-import Sandpack from './components/Sandpack';
-import SandpackWithHTMLOutput from './components/Sandpack/SandpackWithHTMLOutput';
 import Diagram from './components/slides/Diagram';
 import Illustration from './components/slides/Illustration';
 import { createBrowserRouter, Outlet, useParams } from 'react-router-dom';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import GotoPopup from './components/slides/GotoPopup';
-
-import Status from './decks/AspNetWebApi/api1.fr.mdx';
 import { useLanguage } from './components/slides/LanguageProvider';
+
+const Status = lazy(() => import('./decks/AspNetWebApi/api1.fr.mdx'));
+const Sandpack = lazy(() => import('./components/Sandpack'));
+const SandpackWithHTMLOutput = lazy(() => import('./components/Sandpack/SandpackWithHTMLOutput'));
 
 const components = {
   Sandpack,
@@ -76,7 +75,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: 'status',
-            element: <Status components={components} />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <Status components={components} />
+              </Suspense>
+            ),
           },
           {
             path: 'decks/:lang/',

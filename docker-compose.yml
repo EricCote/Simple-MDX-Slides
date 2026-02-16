@@ -1,0 +1,30 @@
+services:
+
+  react-academy:
+    image: slides-react-academy:latest
+    container_name: slides-react-academy
+    restart: unless-stopped
+    expose:
+      - "80"
+    labels:
+      - traefik.enable=true
+      # HTTPS router
+      - traefik.http.routers.react-academy.rule=Host(`slide.reactacademy.live`) || Host(`slides.reactacademy.live`)
+      - traefik.http.routers.react-academy.entrypoints=websecure
+      - traefik.http.routers.react-academy.tls.certresolver=letsencrypt
+      - traefik.http.services.react-academy.loadbalancer.server.port=80
+      # www redirect to non-www
+      - traefik.http.middlewares.www-redirect.redirectregex.regex=^https://slide\.(.*)
+      - traefik.http.middlewares.www-redirect.redirectregex.replacement=https://slides.$${1}
+      - traefik.http.middlewares.www-redirect.redirectregex.permanent=true
+      - traefik.http.routers.react-academy.middlewares=www-redirect
+   
+    networks:
+      - stack_backend
+
+
+networks:
+  stack_backend:
+    external: true
+
+

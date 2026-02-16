@@ -207,7 +207,7 @@ init();
 ```
 
 ```js src/data.js
-const cdnURL = 'https://cdn.glitch.global/de7f29c8-57eb-4eb1-81b5-4e0d8565ade5';
+const cdnURL = 'https://raw.githubusercontent.com/mdn/dom-examples/refs/heads/main/view-transitions/spa/images';
 
 const imageData = [
   {
@@ -587,7 +587,7 @@ export default function App() {
 ```
 
 ```js src/data.js
-const cdnURL = 'https://cdn.glitch.global/de7f29c8-57eb-4eb1-81b5-4e0d8565ade5';
+const cdnURL = 'https://raw.githubusercontent.com/mdn/dom-examples/refs/heads/main/view-transitions/spa/images';
 
 const imageData = [
   {
@@ -719,7 +719,7 @@ h1 {
 
 ```jsx src/App.jsx active
 import {
-  unstable_ViewTransition as ViewTransition,
+  ViewTransition,
   useState,
   startTransition,
 } from 'react';
@@ -775,7 +775,7 @@ export default function App() {
 ```
 
 ```js src/data.js
-const cdnURL = 'https://cdn.glitch.global/de7f29c8-57eb-4eb1-81b5-4e0d8565ade5';
+const cdnURL = 'https://raw.githubusercontent.com/mdn/dom-examples/refs/heads/main/view-transitions/spa/images';
 
 const imageData = [
   {
@@ -1069,7 +1069,7 @@ export function Video({ video }) {
 
 ```js
 import {
-  unstable_ViewTransition as ViewTransition,
+  ViewTransition,
   useState,
   startTransition,
 } from 'react';
@@ -1272,8 +1272,8 @@ Try searching for a video, selecting it, and clicking “back”
 
 ```js src/App.js
 import {
-  unstable_ViewTransition as ViewTransition,
-  unstable_Activity as Activity,
+  ViewTransition,
+  Activity,
 } from 'react';
 import Details from './Details';
 import Home from './Home';
@@ -1299,7 +1299,7 @@ export default function App() {
 import {
   use,
   Suspense,
-  unstable_ViewTransition as ViewTransition,
+  ViewTransition,
 } from 'react';
 import { fetchVideo, fetchVideoDetails } from './data';
 import { Thumbnail, VideoControls } from './Videos';
@@ -1380,7 +1380,7 @@ import {
   useState,
   use,
   useDeferredValue,
-  unstable_ViewTransition as ViewTransition,
+  ViewTransition,
 } from 'react';
 import { Video } from './Videos';
 import Layout from './Layout';
@@ -1588,7 +1588,7 @@ export function IconSearch(props) {
 ```
 
 ```js src/Layout.js hidden
-import { unstable_ViewTransition as ViewTransition } from 'react';
+import { ViewTransition } from 'react';
 import { useIsNavPending } from './router';
 
 export default function Page({ heading, children }) {
@@ -1655,7 +1655,7 @@ export default function LikeButton({ video }) {
 ```
 
 ```js src/Videos.js hidden
-import { useState, unstable_ViewTransition as ViewTransition } from 'react';
+import { useState, ViewTransition } from 'react';
 import LikeButton from './LikeButton';
 import { useRouter } from './router';
 import { PauseIcon, PlayIcon } from './Icons';
@@ -1812,7 +1812,7 @@ import {
   useTransition,
   useLayoutEffect,
   useEffect,
-  unstable_addTransitionType as addTransitionType,
+  addTransitionType,
 } from 'react';
 
 export function Router({ children }) {
@@ -2601,8 +2601,8 @@ root.render(
 
 ```js src/App.js
 import {
-  unstable_ViewTransition as ViewTransition,
-  unstable_Activity as Activity,
+  ViewTransition,
+  Activity,
   use,
 } from 'react';
 import Details from './Details';
@@ -2635,7 +2635,7 @@ export default function App() {
 import {
   use,
   Suspense,
-  unstable_ViewTransition as ViewTransition,
+  ViewTransition,
 } from 'react';
 import { fetchVideo, fetchVideoDetails } from './data';
 import { Thumbnail, VideoControls } from './Videos';
@@ -2717,7 +2717,7 @@ import {
   useState,
   use,
   useDeferredValue,
-  unstable_ViewTransition as ViewTransition,
+  ViewTransition,
 } from 'react';
 import { Video } from './Videos';
 import Layout from './Layout';
@@ -2925,7 +2925,7 @@ export function IconSearch(props) {
 ```
 
 ```js src/Layout.js hidden
-import { unstable_ViewTransition as ViewTransition } from 'react';
+import { ViewTransition } from 'react';
 import { useIsNavPending } from './router';
 
 export default function Page({ heading, children }) {
@@ -2992,7 +2992,7 @@ export default function LikeButton({ video }) {
 ```
 
 ```js src/Videos.js hidden
-import { useState, unstable_ViewTransition as ViewTransition } from 'react';
+import { useState, ViewTransition } from 'react';
 import LikeButton from './LikeButton';
 import { useRouter } from './router';
 import { PauseIcon, PlayIcon } from './Icons';
@@ -3149,7 +3149,7 @@ import {
   useTransition,
   useLayoutEffect,
   useEffect,
-  unstable_addTransitionType as addTransitionType,
+  addTransitionType,
 } from 'react';
 
 export function Router({ children }) {

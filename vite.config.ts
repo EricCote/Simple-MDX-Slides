@@ -50,7 +50,21 @@ writeFile('src/slidedecks.json', JSON.stringify(sortedResults, null, 2));
 // https://vitejs.dev/config
 export default defineConfig(
   /* ({ command }) => ( */ {
-    build: { chunkSizeWarningLimit: 700 },
+    build: {
+      chunkSizeWarningLimit: 700,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // Only separate out the heaviest libraries
+            if (id.includes('node_modules')) {
+              if (id.includes('shiki')) {
+                return 'syntax-highlighting';
+              }
+            }
+          },
+        },
+      },
+    },
     plugins: [
       {
         enforce: 'pre',
@@ -74,6 +88,10 @@ export default defineConfig(
                   dark: 'dark-plus',
                   light: 'catppuccin-latte',
                 },
+                languages: ['javascript', 'typescript', 'jsx', 'tsx', 'css', 'html', 'bash'],
+                // Only include languages you actually use to reduce bundle size
+                // Check your .mdx files to see which languages you need
+                // Example: ['javascript', 'typescript', 'jsx', 'tsx', 'css', 'html', 'bash']
               },
             ],
             [
