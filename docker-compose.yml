@@ -1,6 +1,6 @@
 services:
 
-  react-academy:
+  slides-react-academy:
     image: slides-react-academy:latest
     container_name: slides-react-academy
     restart: unless-stopped
