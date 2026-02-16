@@ -1,6 +1,6 @@
 services:
 
-  slides-react-academy:
+  react-academy:
     image: slides-react-academy:latest
     container_name: slides-react-academy
     restart: unless-stopped
@@ -8,15 +8,17 @@ services:
       - "80"
     labels:
       - traefik.enable=true
-      # HTTP router (needed for ACME HTTP-01 challenge + redirect to HTTPS)
-      - traefik.http.routers.react-academy-http.rule=Host(`slides.reactacademy.live`)
-      - traefik.http.routers.react-academy-http.entrypoints=web
-      - traefik.http.routers.react-academy-http.middlewares=redirect-to-https@file
       # HTTPS router
-      - traefik.http.routers.react-academy.rule=Host(`slides.reactacademy.live`)
-      - traefik.http.routers.react-academy.entrypoints=websecure
-      - traefik.http.routers.react-academy.tls.certresolver=letsencrypt
-      - traefik.http.services.react-academy.loadbalancer.server.port=80
+      - traefik.http.routers.slides-react-academy.rule=Host(`slide.reactacademy.live`) || Host(`slides.reactacademy.live`)
+      - traefik.http.routers.slides-react-academy.entrypoints=websecure
+      - traefik.http.routers.slides-react-academy.tls.certresolver=letsencrypt
+      - traefik.http.services.slides-react-academy.loadbalancer.server.port=80
+      # redirect slide to slides
+      - traefik.http.middlewares.www-redirect.redirectregex.regex=^https://slide\.(.*)
+      - traefik.http.middlewares.www-redirect.redirectregex.replacement=https://slides.$${1}
+      - traefik.http.middlewares.www-redirect.redirectregex.permanent=true
+      - traefik.http.routers.slides-react-academy.middlewares=www-redirect
+   
     networks:
       - stack_backend
 
