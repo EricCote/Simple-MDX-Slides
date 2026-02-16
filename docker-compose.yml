@@ -12,6 +12,8 @@ services:
       - traefik.http.routers.react-academy.rule=Host(`slide.reactacademy.live`) || Host(`slides.reactacademy.live`)
       - traefik.http.routers.react-academy.entrypoints=websecure
       - traefik.http.routers.react-academy.tls.certresolver=letsencrypt
+      - traefik.http.routers.react-academy.tls.domains[0].main=slides.reactacademy.live
+      - traefik.http.routers.react-academy.tls.domains[0].sans=slide.reactacademy.live
       - traefik.http.services.react-academy.loadbalancer.server.port=80
       # www redirect to non-www
       - traefik.http.middlewares.www-redirect.redirectregex.regex=^https://slide\.(.*)
