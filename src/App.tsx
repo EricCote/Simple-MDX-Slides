@@ -1,5 +1,4 @@
 import '~bootstrap/dist/css/bootstrap.min.css';
-//import '@codesandbox/sandpack-react/dist/index.css';
 import './components/slides/slides.css';
 
 import ThemeProvider from './components/dark-mode/ThemeProvider';
